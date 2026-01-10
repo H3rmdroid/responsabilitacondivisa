@@ -21,6 +21,11 @@ import {
 } from "motion/react";
 import { Menu, X } from "lucide-react";
 import { useEffect } from "react";
+import {
+  desktopPxToVw,
+  desktopVhToVw,
+  mobilePxToVw,
+} from "./layout/scale";
 
 export default function App() {
   const [isVisible, setIsVisible] = useState(true);
@@ -36,66 +41,72 @@ export default function App() {
   const textLayout = isDesktop
     ? {
         about: {
-          paddingX: "65px",
+          paddingX: desktopPxToVw(65),
           paddingTop: "0px",
-          paddingBottom: "20px",
-          marginTop: "65vh",
+          paddingBottom: desktopPxToVw(20),
+          marginTop: desktopVhToVw(65),
         },
         impact: {
-          paddingX: "65px",
+          paddingX: desktopPxToVw(65),
           paddingTop: "0px",
-          marginTop: "60vh",
+          marginTop: desktopVhToVw(60),
         },
         quiz: {
           paddingX: "0px",
           paddingTop: "0px",
-          marginTop: "-1500px",
+          marginTop: desktopPxToVw(-1500),
         },
         consigli: {
-          paddingX: "20px",
+          paddingX: desktopPxToVw(20),
           paddingTop: "0px",
-          marginTop: "3350px",
+          marginTop: desktopPxToVw(3350),
         },
         consigliDots: {
-          height: "500px",
-          marginTop: "440px",
+          height: desktopPxToVw(500),
+          marginTop: desktopPxToVw(440),
           offsetX: "0px",
           offsetY: "0px",
         },
       }
     : {
         about: {
-          paddingX: "20px",
+          paddingX: mobilePxToVw(20),
           paddingTop: "0px",
-          paddingBottom: "20px",
-          marginTop: "-70px",
+          paddingBottom: mobilePxToVw(20),
+          marginTop: mobilePxToVw(-70),
         },
         impact: {
-          paddingX: "20px",
+          paddingX: mobilePxToVw(20),
           paddingTop: "0px",
-          marginTop: "10px",
+          marginTop: mobilePxToVw(10),
         },
         quiz: {
           paddingX: "0px",
           paddingTop: "0px",
-          marginTop: "30px",
+          marginTop: mobilePxToVw(30),
         },
         consigli: {
-          paddingX: "20px",
+          paddingX: mobilePxToVw(20),
           paddingTop: "0px",
-          marginTop: "-210px",
+          marginTop: mobilePxToVw(-210),
         },
         consigliDots: {
-          height: "500px",
-          marginTop: "60px",
+          height: mobilePxToVw(500),
+          marginTop: mobilePxToVw(60),
           offsetX: "0px",
           offsetY: "0px",
         },
       };
   const lineBreak = isDesktop ? " " : <br />;
-  const textMaxWidthNarrow = isDesktop ? "820px" : "280px";
-  const textMaxWidthInner = isDesktop ? "820px" : "300px";
-  const textMaxWidthWide = isDesktop ? "820px" : "350px";
+  const textMaxWidthNarrow = isDesktop
+    ? desktopPxToVw(820)
+    : mobilePxToVw(280);
+  const textMaxWidthInner = isDesktop
+    ? desktopPxToVw(820)
+    : mobilePxToVw(300);
+  const textMaxWidthWide = isDesktop
+    ? desktopPxToVw(820)
+    : mobilePxToVw(350);
   
   // Ref per la sezione "Storie di cambiamento"
   const storieCambiamentoRef = useRef<HTMLDivElement>(null);
@@ -604,19 +615,19 @@ export default function App() {
   ];
 
   const consigliPositionsDesktop = [
-    { top: "calc(22% + 11px)", left: "calc(28% - 7px)" },
-    { top: "calc(38% + 470px)", left: "calc(72% - 50px)" },
-    { top: "calc(58% + 357px)", left: "calc(18% + 119px)" },
-    { top: "calc(12% + 80px)", left: "calc(85% - 225px)" },
-    { top: "calc(75% + 30px)", left: "calc(55% - 90px)" },
+    { top: `calc(22% + ${desktopPxToVw(11)})`, left: `calc(28% - ${desktopPxToVw(7)})` },
+    { top: `calc(38% + ${desktopPxToVw(470)})`, left: `calc(72% - ${desktopPxToVw(50)})` },
+    { top: `calc(58% + ${desktopPxToVw(357)})`, left: `calc(18% + ${desktopPxToVw(119)})` },
+    { top: `calc(12% + ${desktopPxToVw(80)})`, left: `calc(85% - ${desktopPxToVw(225)})` },
+    { top: `calc(75% + ${desktopPxToVw(30)})`, left: `calc(55% - ${desktopPxToVw(90)})` },
   ];
 
   const consigliPositionsMobile = [
-    { top: "calc(22% + 12px)", left: "calc(28% - 18px)" },
-    { top: "calc(38% + 198px)", left: "calc(72% - 8px)" },
-    { top: "calc(58% + 6px)", left: "calc(18% + 18px)" },
-    { top: "calc(12% + 68px)", left: "calc(85% - 55px)" },
-    { top: "calc(75% - 160px)", left: "calc(55% - 29px)" },
+    { top: `calc(22% + ${mobilePxToVw(12)})`, left: `calc(28% - ${mobilePxToVw(18)})` },
+    { top: `calc(38% + ${mobilePxToVw(198)})`, left: `calc(72% - ${mobilePxToVw(8)})` },
+    { top: `calc(58% + ${mobilePxToVw(6)})`, left: `calc(18% + ${mobilePxToVw(18)})` },
+    { top: `calc(12% + ${mobilePxToVw(68)})`, left: `calc(85% - ${mobilePxToVw(55)})` },
+    { top: `calc(75% - ${mobilePxToVw(160)})`, left: `calc(55% - ${mobilePxToVw(29)})` },
   ];
 
   const consigliPositions = isDesktop ? consigliPositionsDesktop : consigliPositionsMobile;
@@ -1342,10 +1353,12 @@ export default function App() {
         style={{ 
         backgroundColor: "black", 
         minHeight: isDesktop ? "0vh" : "20vh",
-        marginTop: isDesktop ? "200px" : "120px",
+        marginTop: isDesktop ? desktopPxToVw(200) : mobilePxToVw(120),
         position: "static",
         zIndex: 1,
-        padding: isDesktop ? "150px 50px" : "20px 10px",
+        padding: isDesktop
+          ? `${desktopPxToVw(150)} ${desktopPxToVw(50)}`
+          : `${mobilePxToVw(20)} ${mobilePxToVw(10)}`,
         opacity: 1,
       }}
       >

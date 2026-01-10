@@ -8,14 +8,14 @@ export function BackgroundThreadsSvg2() {
   const isDesktop = useIsDesktop();
   const { threadsSvg2: layoutConfig } = getBackgroundLayout(isDesktop);
   const delayScale = isDesktop ? 1 : 1;
-  const durationScale = isDesktop ? 5 : 5;
+  const durationScale = isDesktop ? 1 : 1;
   
   // Scroll progress per l'SVG dalla sezione quiz
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: isDesktop
-      ? (["start 1%", "end 20%"] as const)
-      : (["start 50%", "end 100%"] as const),
+      ? (["start 100%", "end 100%"] as const)
+      : (["start 100%", "end 100%"] as const),
   });
 
   // Debug
@@ -57,11 +57,8 @@ export function BackgroundThreadsSvg2() {
       }}
     >
       <motion.div
-        className="relative overflow-visible"
-        style={{ 
-          opacity: svgOpacity,
-          height: "100%",
-        }}
+        className="relative"
+        style={{ opacity: svgOpacity, position: "relative", height: "100%", overflow: "visible" }}
       >
         <svg
           id="background-threads-svg-2"
@@ -74,12 +71,13 @@ export function BackgroundThreadsSvg2() {
             left: layoutConfig.svgLeft,
             right: layoutConfig.svgRight,
             width: layoutConfig.svgWidth,
+            transform: layoutConfig.svgTransform,
             height: "auto",
             transformOrigin: layoutConfig.svgTransformOrigin,
             zIndex: 0,
             pointerEvents: "none",
           }}
-          preserveAspectRatio="xMidYStart meet"
+          preserveAspectRatio={layoutConfig.svgPreserveAspectRatio}
         >
           <defs>
             <style>

@@ -1,10 +1,12 @@
+import { desktopVhToVw, mobileVhToVw } from "./scale";
+
 export type BackgroundSvgLayout = {
   containerHeight: string;
   containerTop: string;
   containerLeft: string;
   containerRight: string;
-  svgTop: string;
-  svgLeft: number;
+  svgTop: number;
+  svgLeft: string | number;
   svgWidth: string;
   svgMaxWidth: string | undefined;
   svgTransform: string;
@@ -20,10 +22,11 @@ export type ThreadsSvgLayout = {
   containerRight: string;
   containerHeight: string;
   svgTop: number;
-  svgLeft: number;
+  svgLeft: string | number;
   svgWidth: string;
   svgTransform: string;
   svgTransformOrigin: string;
+  svgPreserveAspectRatio: string;
 };
 
 export type ThreadsSvg2Layout = {
@@ -34,10 +37,12 @@ export type ThreadsSvg2Layout = {
   containerRight: string;
   containerHeight: string;
   svgTop: number;
-  svgLeft: number;
+  svgLeft: string | number;
   svgRight: number | string | undefined;
   svgWidth: string;
+  svgTransform: string;
   svgTransformOrigin: string;
+  svgPreserveAspectRatio: string;
 };
 
 export type DecorativeSvgLayout = {
@@ -46,6 +51,10 @@ export type DecorativeSvgLayout = {
   containerRight: string;
   containerHeight: string;
   svgWidth: string;
+  svgLeft: string;
+  svgTransform: string;
+  svgTop: number;
+  svgPreserveAspectRatio: string;
 };
 
 export type BackgroundLayout = {
@@ -94,27 +103,27 @@ export const getBackgroundLayout = (isDesktop: boolean): BackgroundLayout => {
   const threads2FootprintHeight = toVwHeight(THREADS2_VIEWBOX_HEIGHT);
   const backgroundSvg: BackgroundSvgLayout = isDesktop
     ? {
-        containerHeight: "100vh",
+        containerHeight: desktopVhToVw(100),
         containerTop: "0px",
         containerLeft: "0px",
         containerRight: "0px",
-        svgTop: "0px",
-        svgLeft: 0,
+        svgTop: 0,
+        svgLeft: "50%",
         svgWidth: "100vw",
         svgMaxWidth: undefined,
-        svgTransform: "none",
+        svgTransform: "translateX(-50%)",
         svgPreserveAspectRatio: "xMidYStart meet",
       }
     : {
-        containerHeight: "240vh",
+        containerHeight: mobileVhToVw(240),
         containerTop: "0px",
         containerLeft: "0px",
         containerRight: "0px",
-        svgTop: "0px",
-        svgLeft: 0,
+        svgTop: 0,
+        svgLeft: "50%",
         svgWidth: "109vw",
-        svgMaxWidth: undefined,
-        svgTransform: "none",
+        svgMaxWidth: "2000px",
+        svgTransform: "translateX(-50%)",
         svgPreserveAspectRatio: "xMidYStart meet",
       };
 
@@ -123,73 +132,87 @@ export const getBackgroundLayout = (isDesktop: boolean): BackgroundLayout => {
         opacityRange: [0, 0.08],
         pathCap: 1,
         stickyRelease: 0.36,
-        containerTop: "935vh",
+        containerTop: desktopVhToVw(854),
         containerLeft: "0px",
         containerRight: "0px",
-        containerHeight: "100vh",
+        containerHeight: desktopVhToVw(100),
         svgTop: 0,
-        svgLeft: 0,
+        svgLeft: "50%",
         svgWidth: "100vw",
-        svgTransform: "none",
+        svgTransform: "translateX(-50%)",
         svgTransformOrigin: "top left",
+        svgPreserveAspectRatio: "xMidYStart meet",
       }
     : {
         opacityRange: [0, 0.08],
         pathCap: 1,
         stickyRelease: 0.36,
-        containerTop: "441vh",
+        containerTop: mobileVhToVw(269),
         containerLeft: "0px",
         containerRight: "0px",
-        containerHeight: "100vh",
+        containerHeight: mobileVhToVw(100),
         svgTop: 0,
-        svgLeft: 0,
+        svgLeft: "50%",
         svgWidth: "109vw",
-        svgTransform: "none",
+        svgTransform: "translateX(-50%)",
         svgTransformOrigin: "top left",
+        svgPreserveAspectRatio: "xMidYStart meet",
       };
 
   const threadsSvg2: ThreadsSvg2Layout = isDesktop
     ? {
         opacityRange: [0, 0.08],
         pathCap: 1,
-        containerTop: "1119vh",
+        containerTop: desktopVhToVw(1036.5),
         containerLeft: "0px",
         containerRight: "0px",
-        containerHeight: "100vh",
+        containerHeight: desktopVhToVw(100),
         svgTop: 0,
-        svgLeft: 0,
+        svgLeft: "50%",
+        svgTransform: "translateX(-50%)",
         svgRight: undefined,
         svgWidth: "100vw",
         svgTransformOrigin: "top left",
+        svgPreserveAspectRatio: "xMidYStart meet",
       }
     : {
         opacityRange: [0, 0.08],
         pathCap: 1,
-        containerTop: "506vh",
+        containerTop: mobileVhToVw(326.5),
         containerLeft: "0px",
         containerRight: "0px",
-        containerHeight: "100vh",
+        containerHeight: mobileVhToVw(100),
         svgTop: 0,
-        svgLeft: 0,
+        svgLeft: "50%",
         svgRight: undefined,
         svgWidth: "109vw",
+        svgTransform: "translateX(-50%)",
         svgTransformOrigin: "top left",
+        svgPreserveAspectRatio: "xMidYStart meet",
       };
 
   const decorativeSvg: DecorativeSvgLayout = isDesktop
     ? {
-        containerTop: "540vh",
+        containerTop: desktopVhToVw(540),
         containerLeft: "0px",
         containerRight: "0px",
-        containerHeight: "auto",
+        containerHeight: desktopVhToVw(100),
         svgWidth: "100vw",
+        svgTop: 0,
+        svgLeft: "50%",
+        svgTransform: "translateX(-50%)",
+        svgPreserveAspectRatio: "xMidYStart meet",
       }
     : {
-        containerTop: "304vh",
+        containerTop: mobileVhToVw(104),
         containerLeft: "0px",
         containerRight: "0px",
-        containerHeight: "1px",
+        containerHeight: mobileVhToVw(100),
+        svgTop: 0,
         svgWidth: "109vw",
+        svgLeft: "50%",
+        svgTransform: "translateX(-50%)",
+        svgPreserveAspectRatio: "xMidYStart meet",
       };
 
   const threadsSvgTop = `calc(${threadsSvg.containerTop} + ${threadsSvg.svgTop}px)`;

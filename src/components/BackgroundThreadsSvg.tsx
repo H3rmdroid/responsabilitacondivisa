@@ -12,7 +12,7 @@ export function BackgroundThreadsSvg() {
   const baseDelay = isDesktop ? 0 : 0;
   type ScrollOffset = NonNullable<Parameters<typeof useScroll>[0]>["offset"];
   const offset: ScrollOffset = isDesktop
-    ? ["start 30%", "end 1%"]
+    ? ["start end", "end end"]
     : ["start 110%", "end 1%"];
   
   // Scroll progress per l'SVG dalla sezione quiz
@@ -67,7 +67,7 @@ export function BackgroundThreadsSvg() {
         top: layoutConfig.containerTop,
         left: layoutConfig.containerLeft,
         right: layoutConfig.containerRight,
-        height: layoutConfig.containerHeight, // Sincronizzato con QuizWrapper
+        height: layoutConfig.containerHeight,
         zIndex: 0,
         pointerEvents: "none",
         outline: "none",
@@ -75,10 +75,8 @@ export function BackgroundThreadsSvg() {
       }}
     >
       <motion.div
-        className="sticky top-0 h-screen overflow-visible"
-        style={{ 
-          opacity: svgOpacity
-        }}
+        className="relative"
+        style={{ opacity: svgOpacity, position: "relative", height: "100%", overflow: "visible" }}
       >
         <svg
           id="background-threads-svg"
@@ -96,7 +94,7 @@ export function BackgroundThreadsSvg() {
             zIndex: 0,
             pointerEvents: "none",
           }}
-          preserveAspectRatio="xMidYStart meet"
+          preserveAspectRatio={layoutConfig.svgPreserveAspectRatio}
         >
           <defs>
             <style>

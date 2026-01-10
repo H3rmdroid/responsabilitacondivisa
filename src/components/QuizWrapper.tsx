@@ -3,24 +3,30 @@ import { useRef } from "react";
 import { Quiz } from "./Quiz";
 import { ScrollColorTitle } from "./ScrollColorTitle";
 import { useIsDesktop } from "../hooks/useIsDesktop";
+import {
+  desktopPxToVw,
+  desktopVhToVw,
+  mobilePxToVw,
+  mobileVhToVw,
+} from "../layout/scale";
 
 export function QuizWrapper() {
   const containerRef = useRef<HTMLDivElement>(null);
   const isDesktop = useIsDesktop();
   const layoutConfig = isDesktop
     ? {
-        containerPaddingX: "20px",
-        contentTranslateY: "2200px",
-        titleMarginTop: "10px",
-        titleMarginBottom: "30px",
-        quizTranslateY: "600px",
+        containerPaddingX: desktopPxToVw(20),
+        contentTranslateY: desktopPxToVw(2200),
+        titleMarginTop: desktopPxToVw(10),
+        titleMarginBottom: desktopPxToVw(30),
+        quizTranslateY: desktopPxToVw(600),
       }
     : {
-        containerPaddingX: "25px",
-        contentTranslateY: "-140px",
-        titleMarginTop: "0px",
-        titleMarginBottom: "120px",
-        quizTranslateY: "0px",
+        containerPaddingX: mobilePxToVw(25),
+        contentTranslateY: mobilePxToVw(-140),
+        titleMarginTop: mobilePxToVw(0),
+        titleMarginBottom: mobilePxToVw(120),
+        quizTranslateY: mobilePxToVw(0),
       };
   const quizTitle = isDesktop
     ? "Mappa la tua percezione di \nresponsabilità: fai il punto con \nun quiz"
@@ -43,7 +49,7 @@ export function QuizWrapper() {
       ref={containerRef}
       style={{
         position: "relative",
-        height: "100vh", // Ridotto per evitare il blocco in alto
+        height: isDesktop ? desktopVhToVw(100) : mobileVhToVw(100),
         zIndex: 10,
       }}
     >

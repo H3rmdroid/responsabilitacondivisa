@@ -1,6 +1,12 @@
 import { motion, useScroll, useTransform } from "motion/react";
 import { useRef, useMemo, useEffect, useState } from "react";
 import { useIsDesktop } from "../hooks/useIsDesktop";
+import {
+  desktopPxToVw,
+  desktopVhToVw,
+  mobilePxToVw,
+  mobileVhToVw,
+} from "../layout/scale";
 
 export function FloatingTitle() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -8,10 +14,13 @@ export function FloatingTitle() {
   const [viewportHeight, setViewportHeight] = useState(
     typeof window !== "undefined" ? window.innerHeight : 0
   );
+  const [viewportWidth, setViewportWidth] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 0
+  );
   const config = isDesktop
     ? {
-        sectionHeight: "100vh",
-        stickyOffsetY: 960,
+        sectionHeight: desktopVhToVw(100),
+        stickyOffsetY: desktopPxToVw(960),
         letterDelayMax: 0.3,
         titleOpacityRange: [0, 0.2] as [number, number],
         titleMoveInput: [0, 0.3, 0.8, 1],
@@ -26,8 +35,8 @@ export function FloatingTitle() {
         },
       }
     : {
-        sectionHeight: "240vh",
-        stickyOffsetY: 120,
+        sectionHeight: mobileVhToVw(240),
+        stickyOffsetY: mobilePxToVw(120),
         letterDelayMax: 0.3,
         titleOpacityRange: [0, 0.2] as [number, number],
         titleMoveInput: [0, 1],
@@ -57,15 +66,34 @@ export function FloatingTitle() {
     config.scrollWarpInput,
     config.scrollWarpOutput
   );
-  const sectionHeightMatch = config.sectionHeight.match(
-    /^(-?\d+(?:\.\d+)?)vh$/
-  );
-  const sectionHeightVh = sectionHeightMatch
-    ? parseFloat(sectionHeightMatch[1])
-    : 0;
-  const sectionHeightPx = (sectionHeightVh / 100) * viewportHeight;
+  const resolveLengthToPx = (value: string | number) => {
+    if (typeof value === "number") {
+      return value;
+    }
+
+    const match = value.match(/^(-?\d+(?:\.\d+)?)(vh|vw|px)$/);
+    if (!match) {
+      return 0;
+    }
+
+    const numeric = parseFloat(match[1]);
+    const unit = match[2];
+
+    if (unit === "vh") {
+      return (numeric / 100) * viewportHeight;
+    }
+
+    if (unit === "vw") {
+      return (numeric / 100) * viewportWidth;
+    }
+
+    return numeric;
+  };
+
+  const sectionHeightPx = resolveLengthToPx(config.sectionHeight);
+  const stickyOffsetPx = resolveLengthToPx(config.stickyOffsetY);
   const titleMoveOutputPx = config.titleMoveOutput.map(
-    (value) => config.stickyOffsetY - value * sectionHeightPx
+    (value) => stickyOffsetPx - value * sectionHeightPx
   );
   const titleTranslateY = useTransform(
     scrollYProgress,
@@ -76,6 +104,7 @@ export function FloatingTitle() {
   useEffect(() => {
     const handleResize = () => {
       setViewportHeight(window.innerHeight);
+      setViewportWidth(window.innerWidth);
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -108,8 +137,8 @@ export function FloatingTitle() {
       <motion.div 
         className="sticky top-0 h-screen flex items-start justify-start overflow-hidden" 
         style={{ 
-          paddingLeft: isDesktop ? "80px" : "20px",
-          paddingRight: isDesktop ? "40px" : "20px",
+          paddingLeft: isDesktop ? desktopPxToVw(80) : mobilePxToVw(20),
+          paddingRight: isDesktop ? desktopPxToVw(40) : mobilePxToVw(20),
           y: titleTranslateY,
           opacity: titleOpacity
         }}
@@ -153,10 +182,10 @@ export function FloatingTitle() {
           <div 
             className="relative"
             style={{
-              marginTop: isDesktop ? "24px" : "10px",
+              marginTop: isDesktop ? desktopPxToVw(24) : mobilePxToVw(10),
               fontFamily: "'Inter', sans-serif",
               textAlign: 'left',
-              maxWidth: isDesktop ? '380px' : '270px'
+              maxWidth: isDesktop ? desktopPxToVw(380) : mobilePxToVw(270)
             }}
           >
             <p style={{ 

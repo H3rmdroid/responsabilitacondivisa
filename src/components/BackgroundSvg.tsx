@@ -138,8 +138,13 @@ const debugColors = [
       }}
     >
       <motion.div 
-        className="sticky top-0 h-screen overflow-visible"
-        style={{ opacity: svgOpacity }}
+        className="relative"
+        style={{ 
+          opacity: svgOpacity,
+          height: "100%",
+          position: "relative",
+          overflow: "visible"
+        }}
       >
         <svg
           id="background-svg"
