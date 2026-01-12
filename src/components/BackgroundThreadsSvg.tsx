@@ -12,7 +12,7 @@ export function BackgroundThreadsSvg() {
   const baseDelay = isDesktop ? 0 : 0;
   type ScrollOffset = NonNullable<Parameters<typeof useScroll>[0]>["offset"];
   const offset: ScrollOffset = isDesktop
-    ? ["start end", "end end"]
+    ? ["start 100%", "end 100%"]
     : ["start 110%", "end 1%"];
   
   // Scroll progress per l'SVG dalla sezione quiz
@@ -47,14 +47,14 @@ export function BackgroundThreadsSvg() {
   };
 
 
-    const firstPathdelay = isDesktop ? 0.1 : 0.2;
-    const firstPathDuration = isDesktop ? 0.4 : 0.1;
+    const firstPathdelay = isDesktop ? 0 : 0.2;
+    const firstPathDuration = isDesktop ? 0.3 : 0.3;
 
-    const secondPathDelay = isDesktop ? 0.5 : 0.3;
-    const secondPathDuration = isDesktop ? 0.5 : 0.1;
+    const secondPathDelay = isDesktop ? 0.3 : 0;
+    const secondPathDuration = isDesktop ? 0.3 : 1;
 
-    const thirdPathdelay = isDesktop ? 0.8 : 0.34;
-    const thirdPathDuration = isDesktop ? 0.2 : 0.3;
+    const thirdPathdelay = isDesktop ? 0.4 : 0;
+    const thirdPathDuration = isDesktop ? 1 : 1;
 
 
   
@@ -71,7 +71,7 @@ export function BackgroundThreadsSvg() {
         zIndex: 0,
         pointerEvents: "none",
         outline: "none",
-        backgroundColor: "transparent",
+        backgroundColor: "rgba(160, 68, 68, 0.32)",
       }}
     >
       <motion.div

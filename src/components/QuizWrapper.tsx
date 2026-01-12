@@ -54,7 +54,7 @@ export function QuizWrapper() {
       }}
     >
       <motion.div
-        className="sticky top-0 h-screen flex flex-col items-center justify-center"
+        className="top-0 h-screen flex flex-col items-center justify-center"
         style={{
           paddingLeft: layoutConfig.containerPaddingX,
           paddingRight: layoutConfig.containerPaddingX,

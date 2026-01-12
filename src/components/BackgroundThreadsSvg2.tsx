@@ -8,14 +8,14 @@ export function BackgroundThreadsSvg2() {
   const isDesktop = useIsDesktop();
   const { threadsSvg2: layoutConfig } = getBackgroundLayout(isDesktop);
   const delayScale = isDesktop ? 1 : 1;
-  const durationScale = isDesktop ? 1 : 1;
+  const durationScale = isDesktop ? 1 : 4;
   
   // Scroll progress per l'SVG dalla sezione quiz
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: isDesktop
       ? (["start 100%", "end 100%"] as const)
-      : (["start 100%", "end 100%"] as const),
+      : (["start 50%", "end 100%"] as const),
   });
 
   // Debug

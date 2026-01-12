@@ -103,7 +103,7 @@ export const getBackgroundLayout = (isDesktop: boolean): BackgroundLayout => {
   const threads2FootprintHeight = toVwHeight(THREADS2_VIEWBOX_HEIGHT);
   const backgroundSvg: BackgroundSvgLayout = isDesktop
     ? {
-        containerHeight: desktopVhToVw(100),
+        containerHeight: desktopVhToVw(1150),
         containerTop: "0px",
         containerLeft: "0px",
         containerRight: "0px",
@@ -115,7 +115,7 @@ export const getBackgroundLayout = (isDesktop: boolean): BackgroundLayout => {
         svgPreserveAspectRatio: "xMidYStart meet",
       }
     : {
-        containerHeight: mobileVhToVw(240),
+        containerHeight: mobileVhToVw(340),
         containerTop: "0px",
         containerLeft: "0px",
         containerRight: "0px",
@@ -135,7 +135,7 @@ export const getBackgroundLayout = (isDesktop: boolean): BackgroundLayout => {
         containerTop: desktopVhToVw(854),
         containerLeft: "0px",
         containerRight: "0px",
-        containerHeight: desktopVhToVw(100),
+        containerHeight: desktopVhToVw(460),
         svgTop: 0,
         svgLeft: "50%",
         svgWidth: "100vw",
@@ -193,7 +193,7 @@ export const getBackgroundLayout = (isDesktop: boolean): BackgroundLayout => {
 
   const decorativeSvg: DecorativeSvgLayout = isDesktop
     ? {
-        containerTop: desktopVhToVw(540),
+        containerTop: desktopVhToVw(475),
         containerLeft: "0px",
         containerRight: "0px",
         containerHeight: desktopVhToVw(100),
@@ -204,7 +204,7 @@ export const getBackgroundLayout = (isDesktop: boolean): BackgroundLayout => {
         svgPreserveAspectRatio: "xMidYStart meet",
       }
     : {
-        containerTop: mobileVhToVw(104),
+        containerTop: mobileVhToVw(135),
         containerLeft: "0px",
         containerRight: "0px",
         containerHeight: mobileVhToVw(100),

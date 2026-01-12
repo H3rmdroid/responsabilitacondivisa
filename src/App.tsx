@@ -44,26 +44,26 @@ export default function App() {
           paddingX: desktopPxToVw(65),
           paddingTop: "0px",
           paddingBottom: desktopPxToVw(20),
-          marginTop: desktopVhToVw(65),
+          marginTop: desktopVhToVw(285),
         },
         impact: {
           paddingX: desktopPxToVw(65),
           paddingTop: "0px",
-          marginTop: desktopVhToVw(60),
+          marginTop: desktopVhToVw(550),
         },
         quiz: {
           paddingX: "0px",
           paddingTop: "0px",
-          marginTop: desktopPxToVw(-1500),
+          marginTop: desktopPxToVw(4400),
         },
         consigli: {
           paddingX: desktopPxToVw(20),
           paddingTop: "0px",
-          marginTop: desktopPxToVw(3350),
+          marginTop: desktopPxToVw(8625),
         },
         consigliDots: {
           height: desktopPxToVw(500),
-          marginTop: desktopPxToVw(440),
+          marginTop: desktopPxToVw(415),
           offsetX: "0px",
           offsetY: "0px",
         },
@@ -73,22 +73,22 @@ export default function App() {
           paddingX: mobilePxToVw(20),
           paddingTop: "0px",
           paddingBottom: mobilePxToVw(20),
-          marginTop: mobilePxToVw(-70),
+          marginTop: mobilePxToVw(700),
         },
         impact: {
           paddingX: mobilePxToVw(20),
           paddingTop: "0px",
-          marginTop: mobilePxToVw(10),
+          marginTop: mobilePxToVw(1330),
         },
         quiz: {
           paddingX: "0px",
           paddingTop: "0px",
-          marginTop: mobilePxToVw(30),
+          marginTop: mobilePxToVw(2330),
         },
         consigli: {
           paddingX: mobilePxToVw(20),
           paddingTop: "0px",
-          marginTop: mobilePxToVw(-210),
+          marginTop: mobilePxToVw(2750),
         },
         consigliDots: {
           height: mobilePxToVw(500),
@@ -107,6 +107,9 @@ export default function App() {
   const textMaxWidthWide = isDesktop
     ? desktopPxToVw(820)
     : mobilePxToVw(350);
+  const contentCanvasHeight = isDesktop
+    ? `calc(${textLayout.consigli.marginTop} + ${textLayout.consigliDots.height} + ${desktopPxToVw(400)})`
+    : `calc(${textLayout.consigli.marginTop} + ${textLayout.consigliDots.height} + ${mobilePxToVw(300)})`;
   
   // Ref per la sezione "Storie di cambiamento"
   const storieCambiamentoRef = useRef<HTMLDivElement>(null);
@@ -667,12 +670,12 @@ export default function App() {
         style={{
           position: "relative",
           zIndex: 10,
-          minHeight: pageMinHeight,
+          minHeight: `max(${pageMinHeight}, ${contentCanvasHeight})`,
           display: "grid",
           gridTemplateRows: "1fr auto",
         }}
       >
-      <div>
+      <div style={{ position: "relative", minHeight: pageMinHeight }}>
       <motion.nav
         className="fixed top-0 left-0 right-0 h-[40px] bg-transparent z-50 flex items-center justify-between"
         style={{
@@ -868,11 +871,15 @@ export default function App() {
       <section
         id="about"
         style={{
+          position: "absolute",
+          top: textLayout.about.marginTop,
+          left: 0,
+          right: 0,
           paddingLeft: textLayout.about.paddingX,
           paddingRight: textLayout.about.paddingX,
           paddingTop: textLayout.about.paddingTop,
           paddingBottom: textLayout.about.paddingBottom,
-          marginTop: textLayout.about.marginTop,
+          marginTop: 0,
           maxWidth: isDesktop ? textMaxWidthWide : "100%",
         }}
       >
@@ -934,16 +941,18 @@ export default function App() {
         </div>
       </section>
 
-      <div className="h-[150px]"></div>
-
       <section
         id="impatto-reale"
         className="relative w-full pb-20"
         style={{
+          position: "absolute",
+          top: textLayout.impact.marginTop,
+          left: 0,
+          right: 0,
           paddingLeft: textLayout.impact.paddingX,
           paddingRight: textLayout.impact.paddingX,
           paddingTop: textLayout.impact.paddingTop,
-          marginTop: textLayout.impact.marginTop,
+          marginTop: 0,
         }}
       >
         <div className="mb-[30px]" style={{ marginBottom: isDesktop ? "60px" : "30px" }}>
@@ -1109,39 +1118,43 @@ export default function App() {
         </div>
       </section>
 
-      <div className="h-[60px]"></div>
-
       {/* Sezione Quiz */}
       <section
         id="test"
         className="relative w-full"
         style={{
+          position: "absolute",
+          top: textLayout.quiz.marginTop,
+          left: 0,
+          right: 0,
           paddingLeft: textLayout.quiz.paddingX,
           paddingRight: textLayout.quiz.paddingX,
           paddingTop: textLayout.quiz.paddingTop,
-          marginTop: textLayout.quiz.marginTop,
+          marginTop: 0,
         }}
       >
         {/* Quiz con animazione sticky sincronizzata */}
         <QuizWrapper />
       </section>
 
-      <div className="h-[20px]"></div>
-
       {/* Sezione Cinque Passi */}
       <section
         id="consigli"
         className="relative w-full pb-20"
         style={{
+          position: "absolute",
+          top: textLayout.consigli.marginTop,
+          left: 0,
+          right: 0,
           paddingLeft: textLayout.consigli.paddingX,
           paddingRight: textLayout.consigli.paddingX,
           paddingTop: textLayout.consigli.paddingTop,
-          marginTop: textLayout.consigli.marginTop,
+          marginTop: 0,
         }}
       >
         <div className="mb-[30px]">
           <ScrollColorTitle
-            text={`Cinque passi quotidiani per trasformare\nla pressione in progresso`}
+            text={`Cinque passi quotidiani per trasformare la pressione in progresso`}
           />
         </div>
         
@@ -1352,8 +1365,8 @@ export default function App() {
         className="type-exempt"
         style={{ 
         backgroundColor: "black", 
-        minHeight: isDesktop ? "0vh" : "20vh",
-        marginTop: isDesktop ? desktopPxToVw(200) : mobilePxToVw(120),
+        minHeight: isDesktop ? "0vh" : "0vh",
+        marginTop: isDesktop ? desktopPxToVw(-450) : mobilePxToVw(680),
         position: "static",
         zIndex: 1,
         padding: isDesktop

@@ -15,18 +15,25 @@ export function BackgroundSvg({ storieCambiamentoRef }: BackgroundSvgProps) {
   const [viewportHeight, setViewportHeight] = useState(
     typeof window !== "undefined" ? window.innerHeight : 0
   );
+  type ScrollOffset = NonNullable<Parameters<typeof useScroll>[0]>["offset"];
+  const titleScrollOffset: ScrollOffset = isDesktop
+    ? ["start start", "end 900%"]
+    : ["start 0%", "end 400%"];
+  const lateralScrollOffset: ScrollOffset = isDesktop
+    ? ["start start", "end start"]
+    : ["start 50%", "end 100%"];
 
   const { backgroundSvg: layoutConfig } = getBackgroundLayout(isDesktop);
   
   // Scroll progress per i path dietro al titolo (primi 200vh circa)
   const { scrollYProgress: titleProgress } = useScroll({
     target: containerRef,
-    offset: ["start start", "end start"]
+    offset: titleScrollOffset,
   });
   // Scroll progress per il path laterale: ora agganciato al container del background
   const { scrollYProgress: lateralProgress } = useScroll({
     target: containerRef,
-    offset: ["start start", "end start"],
+    offset: lateralScrollOffset,
   });
   // Progress lineare per le animazioni dei path
   const warpedTitleProgress = titleProgress;
@@ -60,11 +67,11 @@ export function BackgroundSvg({ storieCambiamentoRef }: BackgroundSvgProps) {
   // Path laterale lungo - animazione basata sulla posizione di "Storie di cambiamento"
   // Input normalizzati (0-1) per evitare dipendenza dai pixel di scroll assoluti
   const lateralInput = isDesktop
-    ? [0, 1]
-    : [0, 0.285, 0.649, 0.86, 1];
+    ? [0, 0.13, 0.20, 0.29, 0.45, 0.52, 1]
+    : [0, 0.23, 0.5, 1];
   const lateralOutput = isDesktop
-    ? [0, 1]
-    : [0, 0.054, 0.3, 0.84, 1];
+    ? [0, 0, 0.08, 0.155, 0.29, 0.345, 1]
+    : [0, 0, 0.24, 1];
   const lateralPathLength = useTransform(
     lateralProgress,
     lateralInput,
@@ -134,7 +141,7 @@ const debugColors = [
         pointerEvents: "none",
         overflow: "visible",
         outline: "none",
-        backgroundColor: "transparent",
+        // backgroundColor: "rgba(160, 68, 68, 0.32)",
       }}
     >
       <motion.div 
