@@ -4,10 +4,8 @@ import { Quiz } from "./Quiz";
 import { ScrollColorTitle } from "./ScrollColorTitle";
 import { useIsDesktop } from "../hooks/useIsDesktop";
 import {
-  desktopPxToVw,
-  desktopVhToVw,
-  mobilePxToVw,
-  mobileVhToVw,
+  DESKTOP_REFERENCE_HEIGHT,
+  MOBILE_REFERENCE_HEIGHT,
 } from "../layout/scale";
 
 export function QuizWrapper() {
@@ -15,18 +13,18 @@ export function QuizWrapper() {
   const isDesktop = useIsDesktop();
   const layoutConfig = isDesktop
     ? {
-        containerPaddingX: desktopPxToVw(20),
-        contentTranslateY: desktopPxToVw(2200),
-        titleMarginTop: desktopPxToVw(10),
-        titleMarginBottom: desktopPxToVw(30),
-        quizTranslateY: desktopPxToVw(600),
+        containerPaddingX: 0,
+        contentTranslateY: 0,
+        titleMarginTop: 0,
+        titleMarginBottom: 0,
+        quizTranslateY: 0,
       }
     : {
-        containerPaddingX: mobilePxToVw(25),
-        contentTranslateY: mobilePxToVw(-140),
-        titleMarginTop: mobilePxToVw(0),
-        titleMarginBottom: mobilePxToVw(120),
-        quizTranslateY: mobilePxToVw(0),
+        containerPaddingX: 25,
+        contentTranslateY: -140,
+        titleMarginTop: 0,
+        titleMarginBottom: 120,
+        quizTranslateY: 0,
       };
   const quizTitle = isDesktop
     ? "Mappa la tua percezione di \nresponsabilità: fai il punto con \nun quiz"
@@ -49,18 +47,18 @@ export function QuizWrapper() {
       ref={containerRef}
       style={{
         position: "relative",
-        height: isDesktop ? desktopVhToVw(100) : mobileVhToVw(100),
+        height: isDesktop ? DESKTOP_REFERENCE_HEIGHT : MOBILE_REFERENCE_HEIGHT,
         zIndex: 10,
       }}
     >
       <motion.div
-        className="top-0 h-screen flex flex-col items-center justify-center"
+        className="top-0 h-full flex flex-col items-center justify-center"
         style={{
           paddingLeft: layoutConfig.containerPaddingX,
           paddingRight: layoutConfig.containerPaddingX,
         }}
       >
-        <div style={{ transform: `translateY(${layoutConfig.contentTranslateY})` }}>
+        <div style={{ transform: `translateY(${layoutConfig.contentTranslateY}px)` }}>
           <div
             style={{
               marginBottom: layoutConfig.titleMarginBottom,
@@ -71,7 +69,7 @@ export function QuizWrapper() {
           </div>
           <motion.div 
             style={{ 
-              transform: `translateY(${layoutConfig.quizTranslateY})`,
+              transform: `translateY(${layoutConfig.quizTranslateY}px)`,
               opacity: quizContentOpacity
             }}
           >

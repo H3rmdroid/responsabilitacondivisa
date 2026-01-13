@@ -3,7 +3,7 @@ import { DecorativeSvg } from "./components/DecorativeSvg";
 import { BackgroundThreadsSvg } from "./components/BackgroundThreadsSvg";
 import { BackgroundThreadsSvg2 } from "./components/BackgroundThreadsSvg2";
 import { QuizWrapper } from "./components/QuizWrapper";
-import { useState, useRef } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { FloatingTitle } from "./components/FloatingTitle";
 import { ScrollColorTitle } from "./components/ScrollColorTitle";
 import { AccordionItem } from "./components/AccordionItem";
@@ -15,17 +15,19 @@ import {
   motion,
   useScroll,
   useMotionValueEvent,
-  useTransform,
-  useMotionValue,
-  animate,
 } from "motion/react";
 import { Menu, X } from "lucide-react";
-import { useEffect } from "react";
 import {
-  desktopPxToVw,
-  desktopVhToVw,
-  mobilePxToVw,
+  DESKTOP_REFERENCE_HEIGHT,
+  DESKTOP_REFERENCE_WIDTH,
+  MOBILE_REFERENCE_HEIGHT,
+  MOBILE_REFERENCE_WIDTH,
 } from "./layout/scale";
+
+const desktopVhToPx = (vh: number) =>
+  (vh / 100) * DESKTOP_REFERENCE_HEIGHT;
+const mobileVhToPx = (vh: number) =>
+  (vh / 100) * MOBILE_REFERENCE_HEIGHT;
 
 export default function App() {
   const [isVisible, setIsVisible] = useState(true);
@@ -38,78 +40,119 @@ export default function App() {
   });
   const isDesktop = useIsDesktop();
   const { pageMinHeight } = getBackgroundLayout(isDesktop);
+  const textReferenceWidth = isDesktop
+    ? DESKTOP_REFERENCE_WIDTH
+    : MOBILE_REFERENCE_WIDTH;
+  const [textScale, setTextScale] = useState(() => {
+    if (typeof window === "undefined") {
+      return 1;
+    }
+
+    return window.innerWidth / textReferenceWidth;
+  });
+
+  useEffect(() => {
+    const updateScale = () => {
+      const width = window.innerWidth || textReferenceWidth;
+      setTextScale(width / textReferenceWidth);
+    };
+
+    updateScale();
+    window.addEventListener("resize", updateScale);
+
+    return () => window.removeEventListener("resize", updateScale);
+  }, [textReferenceWidth]);
   const textLayout = isDesktop
     ? {
         about: {
-          paddingX: desktopPxToVw(65),
-          paddingTop: "0px",
-          paddingBottom: desktopPxToVw(20),
-          marginTop: desktopVhToVw(285),
+          paddingX: 65,
+          paddingTop: 0,
+          paddingBottom: 20,
+          marginTop: desktopVhToPx(285),
         },
         impact: {
-          paddingX: desktopPxToVw(65),
-          paddingTop: "0px",
-          marginTop: desktopVhToVw(550),
+          paddingX: 65,
+          paddingTop: 0,
+          marginTop: desktopVhToPx(550),
         },
         quiz: {
-          paddingX: "0px",
-          paddingTop: "0px",
-          marginTop: desktopPxToVw(4400),
+          paddingX: 0,
+          paddingTop: 0,
+          marginTop: 7300,
         },
         consigli: {
-          paddingX: desktopPxToVw(20),
-          paddingTop: "0px",
-          marginTop: desktopPxToVw(8625),
+          paddingX: 20,
+          paddingTop: 0,
+          marginTop: 8625,
         },
         consigliDots: {
-          height: desktopPxToVw(500),
-          marginTop: desktopPxToVw(415),
-          offsetX: "0px",
-          offsetY: "0px",
+          height: 500,
+          marginTop: 415,
+          offsetX: 0,
+          offsetY: 0,
         },
       }
     : {
         about: {
-          paddingX: mobilePxToVw(20),
-          paddingTop: "0px",
-          paddingBottom: mobilePxToVw(20),
-          marginTop: mobilePxToVw(700),
+          paddingX: 20,
+          paddingTop: 0,
+          paddingBottom: 20,
+          marginTop: 700,
         },
         impact: {
-          paddingX: mobilePxToVw(20),
-          paddingTop: "0px",
-          marginTop: mobilePxToVw(1330),
+          paddingX: 20,
+          paddingTop: 0,
+          marginTop: 1450,
         },
         quiz: {
-          paddingX: "0px",
-          paddingTop: "0px",
-          marginTop: mobilePxToVw(2330),
+          paddingX: 0,
+          paddingTop: 0,
+          marginTop: 2270,
         },
         consigli: {
-          paddingX: mobilePxToVw(20),
-          paddingTop: "0px",
-          marginTop: mobilePxToVw(2750),
+          paddingX: 20,
+          paddingTop: 0,
+          marginTop: 2833,
         },
         consigliDots: {
-          height: mobilePxToVw(500),
-          marginTop: mobilePxToVw(60),
-          offsetX: "0px",
-          offsetY: "0px",
+          height: 500,
+          marginTop: 60,
+          offsetX: 0,
+          offsetY: 0,
         },
       };
   const lineBreak = isDesktop ? " " : <br />;
   const textMaxWidthNarrow = isDesktop
-    ? desktopPxToVw(820)
-    : mobilePxToVw(280);
+    ? 820
+    : 280;
   const textMaxWidthInner = isDesktop
-    ? desktopPxToVw(820)
-    : mobilePxToVw(300);
+    ? 820
+    : 300;
   const textMaxWidthWide = isDesktop
-    ? desktopPxToVw(820)
-    : mobilePxToVw(350);
-  const contentCanvasHeight = isDesktop
-    ? `calc(${textLayout.consigli.marginTop} + ${textLayout.consigliDots.height} + ${desktopPxToVw(400)})`
-    : `calc(${textLayout.consigli.marginTop} + ${textLayout.consigliDots.height} + ${mobilePxToVw(300)})`;
+    ? 820
+    : 350;
+  const footerLayout = isDesktop
+    ? {
+        paddingX: 50,
+        paddingY: 150,
+        minHeight: 360,
+        offsetTop: 1500,
+      }
+    : {
+        paddingX: 10,
+        paddingY: 20,
+        minHeight: 220,
+        offsetTop: 200,
+      };
+  const footerTop =
+    textLayout.consigli.marginTop +
+    textLayout.consigliDots.height +
+    footerLayout.offsetTop;
+  const textCanvasHeight =
+    footerTop + footerLayout.minHeight;
+  const textScaledHeight = textCanvasHeight * textScale;
+  const textScaledWidth = textReferenceWidth * textScale;
+  const contentCanvasHeight = `${Math.round(textScaledHeight)}px`;
   
   // Ref per la sezione "Storie di cambiamento"
   const storieCambiamentoRef = useRef<HTMLDivElement>(null);
@@ -124,10 +167,13 @@ export default function App() {
     esperienze: null,
     storie: null,
   });
+  const isAccordionOpen =
+    openAccordions.dati !== null ||
+    openAccordions.esperienze !== null ||
+    openAccordions.storie !== null;
   
   // Stato per il consiglio aperto
   const [openConsiglio, setOpenConsiglio] = useState<number | null>(null);
-
   const { scrollY } = useScroll();
   const navRef = useRef(null);
 
@@ -618,19 +664,19 @@ export default function App() {
   ];
 
   const consigliPositionsDesktop = [
-    { top: `calc(22% + ${desktopPxToVw(11)})`, left: `calc(28% - ${desktopPxToVw(7)})` },
-    { top: `calc(38% + ${desktopPxToVw(470)})`, left: `calc(72% - ${desktopPxToVw(50)})` },
-    { top: `calc(58% + ${desktopPxToVw(357)})`, left: `calc(18% + ${desktopPxToVw(119)})` },
-    { top: `calc(12% + ${desktopPxToVw(80)})`, left: `calc(85% - ${desktopPxToVw(225)})` },
-    { top: `calc(75% + ${desktopPxToVw(30)})`, left: `calc(55% - ${desktopPxToVw(90)})` },
+    { top: "calc(22% + 11px)", left: "calc(28% - 7px)" },
+    { top: "calc(38% + 470px)", left: "calc(72% - 50px)" },
+    { top: "calc(58% + 357px)", left: "calc(18% + 119px)" },
+    { top: "calc(12% + 80px)", left: "calc(85% - 225px)" },
+    { top: "calc(75% + 30px)", left: "calc(55% - 90px)" },
   ];
 
   const consigliPositionsMobile = [
-    { top: `calc(22% + ${mobilePxToVw(12)})`, left: `calc(28% - ${mobilePxToVw(18)})` },
-    { top: `calc(38% + ${mobilePxToVw(198)})`, left: `calc(72% - ${mobilePxToVw(8)})` },
-    { top: `calc(58% + ${mobilePxToVw(6)})`, left: `calc(18% + ${mobilePxToVw(18)})` },
-    { top: `calc(12% + ${mobilePxToVw(68)})`, left: `calc(85% - ${mobilePxToVw(55)})` },
-    { top: `calc(75% - ${mobilePxToVw(160)})`, left: `calc(55% - ${mobilePxToVw(29)})` },
+    { top: "calc(22% + 12px)", left: "calc(28% - 18px)" },
+    { top: "calc(38% + 198px)", left: "calc(72% - 8px)" },
+    { top: "calc(58% + 6px)", left: "calc(18% + 18px)" },
+    { top: "calc(12% + 68px)", left: "calc(85% - 55px)" },
+    { top: "calc(75% - 160px)", left: "calc(55% - 29px)" },
   ];
 
   const consigliPositions = isDesktop ? consigliPositionsDesktop : consigliPositionsMobile;
@@ -638,6 +684,32 @@ export default function App() {
     ...item,
     position: consigliPositions[index] ?? { top: "0px", left: "0px" },
   }));
+  const textScaleOuterStyles: CSSProperties = {
+    position: "relative",
+    width: textScaledWidth,
+    height: textScaledHeight,
+  };
+  const textScaleInnerStyles: CSSProperties & Record<string, string | number> = {
+    position: "relative",
+    width: textReferenceWidth,
+    height: textCanvasHeight,
+    transform: `scale(${textScale})`,
+    transformOrigin: "top left",
+    willChange: "transform",
+    "--type-scale": 1,
+    "--type-hero": isDesktop ? "64px" : "40px",
+    "--type-hero-sub-strong": isDesktop ? "28px" : "16px",
+    "--type-hero-sub": isDesktop ? "26px" : "16px",
+    "--type-section-title": isDesktop ? "42px" : "24px",
+    "--type-section-subtitle": isDesktop ? "28px" : "18px",
+    "--type-section-body": isDesktop ? "20px" : "16px",
+    "--type-section-body-sm": isDesktop ? "18px" : "15px",
+    "--type-section-meta": isDesktop ? "16px" : "12px",
+    "--type-quiz-title": "var(--type-section-body)",
+    "--type-quiz-subtitle": "var(--type-section-body)",
+    "--type-quiz-body": "var(--type-section-body)",
+    "--type-quiz-meta": isDesktop ? "16px" : "12px",
+  };
 
   return (
       <div
@@ -657,6 +729,8 @@ export default function App() {
           height: pageMinHeight,
           pointerEvents: "none",
           zIndex: 0,
+          opacity: isAccordionOpen ? 0 : 1,
+          transition: "opacity 200ms ease",
         }}
       >
         <BackgroundSvg storieCambiamentoRef={storieCambiamentoRef} />
@@ -866,80 +940,82 @@ export default function App() {
         </div>
       </motion.div>
 
-      <FloatingTitle />
+      <div style={textScaleOuterStyles}>
+        <div style={textScaleInnerStyles}>
+        <FloatingTitle />
 
-      <section
-        id="about"
-        style={{
-          position: "absolute",
-          top: textLayout.about.marginTop,
-          left: 0,
-          right: 0,
-          paddingLeft: textLayout.about.paddingX,
-          paddingRight: textLayout.about.paddingX,
-          paddingTop: textLayout.about.paddingTop,
-          paddingBottom: textLayout.about.paddingBottom,
-          marginTop: 0,
-          maxWidth: isDesktop ? textMaxWidthWide : "100%",
-        }}
-      >
-        <div className="flex flex-col gap-[37px]">
-          <div>
-            <ScrollColorTitle
-              text={`Oltre il "Ce la devo \nfare da solo". `}
-            />
+        <section
+          id="about"
+          style={{
+            position: "absolute",
+            top: textLayout.about.marginTop,
+            left: 0,
+            right: 0,
+            paddingLeft: textLayout.about.paddingX,
+            paddingRight: textLayout.about.paddingX,
+            paddingTop: textLayout.about.paddingTop,
+            paddingBottom: textLayout.about.paddingBottom,
+            marginTop: 0,
+            maxWidth: isDesktop ? textMaxWidthWide : "100%",
+          }}
+        >
+          <div className="flex flex-col gap-[37px]">
+            <div>
+              <ScrollColorTitle
+                text={`Oltre il "Ce la devo \nfare da solo". `}
+              />
+            </div>
+            <div
+              className="text-black flex flex-col gap-[42px]"
+              style={{ maxWidth: textMaxWidthNarrow }}
+            >
+              <p
+                style={{
+                  fontFamily: "'Inter', sans-serif",
+                  fontSize: "var(--type-section-body)",
+                  lineHeight: "1.3",
+                  textAlign: "left",
+                }}
+              >
+                Spesso, la parola "responsabilità" evoca{" "}
+                <strong>stress</strong>, sovraccarico{lineBreak}e
+                solitudine. Ci sentiamo l'unico punto di
+                fallimento o successo.{lineBreak}Ma cosa succederebbe se
+                la vedessimo come un'
+                <strong>opportunità</strong> di crescita
+                collettiva?
+              </p>
+              <p
+                style={{
+                  fontFamily: "'Inter', sans-serif",
+                  fontSize: "var(--type-section-body)",
+                  lineHeight: "1.3",
+                  textAlign: "left",
+                }}
+              >
+                Il benessere sul lavoro{" "}
+                <strong>non è un benefit</strong>, ma il
+                risultato{lineBreak}di un ambiente dove la responsabilità{lineBreak}è condivisa, chiara e sostenibile. Significa
+                passare dal "Ce la devo fare da solo" al "{" "}
+                <strong>Ci riusciamo insieme</strong>".
+              </p>
+              <p
+                style={{
+                  fontFamily: "'Inter', sans-serif",
+                  fontSize: "var(--type-section-body)",
+                  lineHeight: "1.3",
+                  textAlign: "left",
+                }}
+              >
+                Questo è il punto di partenza{lineBreak}per comprendere e{" "}
+                <strong>trasformare</strong>{lineBreak}il nostro rapporto
+                con la responsabilità lavorativa, rendendola un
+                motore{lineBreak}di <strong>benessere</strong>, non un
+                freno.
+              </p>
+            </div>
           </div>
-          <div
-            className="text-black flex flex-col gap-[42px]"
-            style={{ maxWidth: textMaxWidthNarrow }}
-          >
-            <p
-              style={{
-                fontFamily: "'Inter', sans-serif",
-                fontSize: "var(--type-section-body)",
-                lineHeight: "1.3",
-                textAlign: "left",
-              }}
-            >
-              Spesso, la parola "responsabilità" evoca{" "}
-              <strong>stress</strong>, sovraccarico{lineBreak}e
-              solitudine. Ci sentiamo l'unico punto di
-              fallimento o successo.{lineBreak}Ma cosa succederebbe se
-              la vedessimo come un'
-              <strong>opportunità</strong> di crescita
-              collettiva?
-            </p>
-            <p
-              style={{
-                fontFamily: "'Inter', sans-serif",
-                fontSize: "var(--type-section-body)",
-                lineHeight: "1.3",
-                textAlign: "left",
-              }}
-            >
-              Il benessere sul lavoro{" "}
-              <strong>non è un benefit</strong>, ma il
-              risultato{lineBreak}di un ambiente dove la responsabilità{lineBreak}è condivisa, chiara e sostenibile. Significa
-              passare dal "Ce la devo fare da solo" al "{" "}
-              <strong>Ci riusciamo insieme</strong>".
-            </p>
-            <p
-              style={{
-                fontFamily: "'Inter', sans-serif",
-                fontSize: "var(--type-section-body)",
-                lineHeight: "1.3",
-                textAlign: "left",
-              }}
-            >
-              Questo è il punto di partenza{lineBreak}per comprendere e{" "}
-              <strong>trasformare</strong>{lineBreak}il nostro rapporto
-              con la responsabilità lavorativa, rendendola un
-              motore{lineBreak}di <strong>benessere</strong>, non un
-              freno.
-            </p>
-          </div>
-        </div>
-      </section>
+        </section>
 
       <section
         id="impatto-reale"
@@ -1131,6 +1207,9 @@ export default function App() {
           paddingRight: textLayout.quiz.paddingX,
           paddingTop: textLayout.quiz.paddingTop,
           marginTop: 0,
+          opacity: isAccordionOpen ? 0 : 1,
+          pointerEvents: isAccordionOpen ? "none" : "auto",
+          transition: "opacity 200ms ease",
         }}
       >
         {/* Quiz con animazione sticky sincronizzata */}
@@ -1138,255 +1217,260 @@ export default function App() {
       </section>
 
       {/* Sezione Cinque Passi */}
-      <section
-        id="consigli"
-        className="relative w-full pb-20"
-        style={{
-          position: "absolute",
-          top: textLayout.consigli.marginTop,
-          left: 0,
-          right: 0,
-          paddingLeft: textLayout.consigli.paddingX,
-          paddingRight: textLayout.consigli.paddingX,
-          paddingTop: textLayout.consigli.paddingTop,
-          marginTop: 0,
-        }}
-      >
-        <div className="mb-[30px]">
-          <ScrollColorTitle
-            text={`Cinque passi quotidiani per trasformare la pressione in progresso`}
-          />
-        </div>
-        
-        {/* Area con pallini interattivi */}
-        <div
-          className="relative w-full"
+        <section
+          id="consigli"
+          className="relative w-full pb-20"
           style={{
-            height: textLayout.consigliDots.height,
-            marginTop: textLayout.consigliDots.marginTop,
-            transform: `translate(${textLayout.consigliDots.offsetX}, ${textLayout.consigliDots.offsetY})`,
+            position: "absolute",
+            top: textLayout.consigli.marginTop,
+            left: 0,
+            right: 0,
+            paddingLeft: textLayout.consigli.paddingX,
+            paddingRight: textLayout.consigli.paddingX,
+            paddingTop: textLayout.consigli.paddingTop,
+            marginTop: 0,
+            opacity: isAccordionOpen ? 0 : 1,
+            pointerEvents: isAccordionOpen ? "none" : "auto",
+            transition: "opacity 200ms ease",
           }}
         >
-          {consigliDots.map((consiglio, index) => (
-            <motion.button
-              key={index}
-              className="absolute cursor-pointer"
-              style={{
-                top: consiglio.position.top,
-                left: consiglio.position.left,
-                width: isDesktop ? "25px" : "7.5px",
-                height: isDesktop ? "25px" : "7.5px", 
-                borderRadius: "50%",
-                backgroundColor: "black",
-                border: "none",
-              }}
-              animate={{
-                boxShadow: [
-                  "0 0 0 0px rgba(0, 0, 0, 0.6), 0 0 0 3px rgba(0, 0, 0, 0.4), 0 0 0 6px rgba(0, 0, 0, 0.2)",
-                  "0 0 0 3px rgba(0, 0, 0, 0.6), 0 0 0 6px rgba(0, 0, 0, 0.4), 0 0 0 9px rgba(0, 0, 0, 0.2)",
-                  "0 0 0 0px rgba(0, 0, 0, 0.6), 0 0 0 3px rgba(0, 0, 0, 0.4), 0 0 0 6px rgba(0, 0, 0, 0.2)",
-                ],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              whileHover={{
-                scale: 2,
-                boxShadow: "0 0 0 3px rgba(0, 0, 0, 0.7), 0 0 0 6px rgba(0, 0, 0, 0.5), 0 0 0 9px rgba(0, 0, 0, 0.3)",
-              }}
-              whileTap={{ scale: 1.5 }}
-              onClick={() => setOpenConsiglio(openConsiglio === index ? null : index)}
-              aria-label={`Consiglio ${index + 1}: ${consiglio.title}`}
+          <div className="mb-[30px]">
+            <ScrollColorTitle
+              text={`Cinque passi quotidiani per trasformare la pressione in progresso`}
             />
-          ))}
-        </div>
+          </div>
+          
+          {/* Area con pallini interattivi */}
+          <div
+            className="relative w-full"
+            style={{
+              height: textLayout.consigliDots.height,
+              marginTop: textLayout.consigliDots.marginTop,
+              transform: `translate(${textLayout.consigliDots.offsetX}px, ${textLayout.consigliDots.offsetY}px)`,
+            }}
+          >
+            {consigliDots.map((consiglio, index) => (
+              <motion.button
+                key={index}
+                className="absolute cursor-pointer"
+                style={{
+                  top: consiglio.position.top,
+                  left: consiglio.position.left,
+                  width: isDesktop ? "25px" : "7.5px",
+                  height: isDesktop ? "25px" : "7.5px", 
+                  borderRadius: "50%",
+                  backgroundColor: "black",
+                  border: "none",
+                }}
+                animate={{
+                  boxShadow: [
+                    "0 0 0 0px rgba(0, 0, 0, 0.6), 0 0 0 3px rgba(0, 0, 0, 0.4), 0 0 0 6px rgba(0, 0, 0, 0.2)",
+                    "0 0 0 3px rgba(0, 0, 0, 0.6), 0 0 0 6px rgba(0, 0, 0, 0.4), 0 0 0 9px rgba(0, 0, 0, 0.2)",
+                    "0 0 0 0px rgba(0, 0, 0, 0.6), 0 0 0 3px rgba(0, 0, 0, 0.4), 0 0 0 6px rgba(0, 0, 0, 0.2)",
+                  ],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                whileHover={{
+                  scale: 2,
+                  boxShadow: "0 0 0 3px rgba(0, 0, 0, 0.7), 0 0 0 6px rgba(0, 0, 0, 0.5), 0 0 0 9px rgba(0, 0, 0, 0.3)",
+                }}
+                whileTap={{ scale: 1.5 }}
+                onClick={() => setOpenConsiglio(openConsiglio === index ? null : index)}
+                aria-label={`Consiglio ${index + 1}: ${consiglio.title}`}
+              />
+            ))}
+          </div>
+        </section>
 
-        {/* Accordion per visualizzare il consiglio selezionato */}
-        {openConsiglio !== null && (
-          <>
-            {/* Overlay scuro */}
+        {/* Footer nero */}
+        <div
+          className="type-exempt"
+          style={{ 
+          backgroundColor: "black", 
+          position: "absolute",
+          top: footerTop,
+          left: 0,
+          right: 0,
+          minHeight: footerLayout.minHeight,
+          marginTop: 0,
+          zIndex: 1,
+          padding: `${footerLayout.paddingY}px ${footerLayout.paddingX}px`,
+          opacity: 1,
+        }}
+        >
+          <div style={{
+            fontFamily: "'Inter', sans-serif",
+            fontWeight: 200,
+            lineHeight: "0.3",
+            color: "white"
+          }}>
+            <p style={{ marginBottom: "15px", fontSize: isDesktop ? "38px" : "var(--type-micro)" }}>Pausa Caffè</p>
+            <p style={{ marginBottom: "15px", fontSize: isDesktop ? "28px" : "var(--type-micro)" }}>Un progetto della Rete dei Comitati Unici di Garanzia e degli Organismi di Parità Città di Milano</p>
+            <p style={{ marginBottom: "15px", fontSize: isDesktop ? "28px" : "var(--type-micro)" }}>Design della comunicazione e benessere nei luoghi di lavoro//Laboratorio di Sintesi Finale//Corso di Laurea in Design della Comunicazione//Scuola del Design, Politecnico di Milano//A.A. 2025–2026</p>
+            <p style={{ marginBottom: "0px", fontSize: isDesktop ? "28px" : "var(--type-micro)" }}>Progetto di Lia Feng, Meng Xin Wang, Ermida Teresa Norì, Ece Gorpelioglu</p>
+          </div>
+        </div>
+        </div>
+      </div>
+      </div>
+
+      {openConsiglio !== null && (
+        <>
+          {/* Overlay scuro */}
+          <motion.div
+            className="fixed inset-0 bg-black z-40"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.5 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            onClick={() => setOpenConsiglio(null)}
+          />
+          
+          {/* Container di posizionamento */}
+          <div
+            className="fixed z-50"
+            style={{
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: "90vw",
+              maxWidth: "500px",
+            }}
+          >
+            {/* Accordion animato */}
             <motion.div
-              className="fixed inset-0 bg-black z-40"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.5 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              onClick={() => setOpenConsiglio(null)}
-            />
-            
-            {/* Container di posizionamento */}
-            <div
-              className="fixed z-50"
-              style={{
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                width: "90vw",
-                maxWidth: "500px",
-              }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
             >
-              {/* Accordion animato */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.3, ease: "easeInOut" }}
+              <div
+                style={{
+                  padding: "30px",
+                  backgroundColor: "white",
+                  border: "1px solid black",
+                  maxHeight: "80vh",
+                  overflowY: "auto",
+                }}
               >
-                <div
+                <div className="flex justify-end mb-4">
+                  <button
+                    onClick={() => setOpenConsiglio(null)}
+                    className="text-black cursor-pointer"
+                    aria-label="Close"
+                  >
+                    <X size={24} />
+                  </button>
+                </div>
+                <h4
                   style={{
-                    padding: "30px",
-                    backgroundColor: "white",
-                    border: "1px solid black",
-                    maxHeight: "80vh",
-                    overflowY: "auto",
+                    fontFamily: "'Inter', sans-serif",
+                    fontWeight: 700,
+                    fontSize: "var(--type-section-title)",
+                    lineHeight: "1.05",
+                    marginBottom: "12px",
                   }}
                 >
-                  <div className="flex justify-end mb-4">
-                    <button
-                      onClick={() => setOpenConsiglio(null)}
-                      className="text-black cursor-pointer"
-                      aria-label="Close"
-                    >
-                      <X size={24} />
-                    </button>
-                  </div>
-                  <h4
-                    style={{
-                      fontFamily: "'Inter', sans-serif",
-                      fontWeight: 700,
-                      fontSize: "var(--type-section-title)",
-                      lineHeight: "1.05",
-                      marginBottom: "12px",
-                    }}
-                  >
-                    {openConsiglio === 0 ? (
-                      <>
-                        Riconosci i tuoi limiti: impara il "Sì, ma..."
-                      </>
-                    ) : openConsiglio === 1 ? (
-                      <>
-                        Condividi il carico: dall'io al noi
-                      </>
-                    ) : openConsiglio === 2 ? (
-                      <>
-                        Celebra i piccoli successi: nutri{" "}
-                        <br />
-                        la motivazione
-                      </>
-                    ) : openConsiglio === 3 ? (
-                      <>
-                        Focalizzati sull'impatto, non sulla perfezione
-                      </>
-                    ) : openConsiglio === 4 ? (
-                      <>
-                        Comunica apertamente: la trasparenza paga
-                      </>
-                    ) : null}
-                  </h4>
-                  <p
-                    style={{
-                      fontFamily: "'Inter', sans-serif",
-                      fontSize: "var(--type-section-body)",
-                      lineHeight: "1.3",
-                      fontWeight: 400,
-                    }}
-                  >
-                    {openConsiglio === 0 ? (
-                      <>
-                        La forza è sapere <strong>quando fermarsi</strong>. Impara a riconoscere in anticipo{" "}
-                        <br />
-                        i segnali di <strong>sovraccarico</strong>. Quando ricevi un nuovo compito, invece{" "}
-                        <br />
-                        di accettare passivamente, usa{" "}
-                        <br />
-                        la formula "Sì, lo gestirò ma ho bisogno di <strong>ridefinire la priorità</strong> di X o di delegare Y". Questo definisce <strong>confini chiari</strong> e protegge
-                        <br />
-                        il tuo benessere.
-                      </>
-                    ) : openConsiglio === 1 ? (
-                      <>
-                        Non devi essere l'unico eroe.{" "}
-                        <br />
-                        La <strong>responsabilità condivisa</strong>{" "}
-                        <br />
-                        è un pilastro del successo di team.{" "}
-                        <br />
-                        Se ti senti sommerso/a, <strong>non aspettare di essere in crisi</strong>. Avvicinati a un collega o al tuo responsabile e <strong>chiedi</strong>: "Potresti aiutarmi a sbloccare questa sezione? O a esaminare insieme{" "}
-                        <br />
-                        il piano d'azione?". <strong>Dividere</strong> riduce il rischio e aumenta la velocità.
-                      </>
-                    ) : openConsiglio === 4 ? (
-                      <>
-                        L'<strong>incertezza</strong> è la vera fonte{" "}
-                        <br />
-                        di stress. Se hai un problema,{" "}
-                        <br />
-                        se la scadenza è a rischio,{" "}
-                        <br />
-                        o se hai bisogno di risorse, <strong>comunica immediatamente</strong>{" "}
-                        <br />
-                        e con chiarezza. La responsabilità non è garantire la perfezione,{" "}
-                        <br />
-                        ma garantire la <strong>trasparenza</strong>{" "}
-                        <br />
-                        sul progresso. Il team può aiutarti solo se sa esattamente dove sei.
-                      </>
-                    ) : openConsiglio === 2 ? (
-                      <>
-                        Non aspettare il traguardo finale.{" "}
-                        <br />
-                        Il benessere fiorisce quando <strong>riconosciamo il progresso</strong>.{" "}
-                        <br />
-                        Hai chiuso una mail particolarmente complessa? Hai terminato la prima fase del progetto? <strong>Prenditi un momento</strong> (anche solo un minuto!) per riconoscere quel piccolo risultato. <strong>Celebrare i "mini-goal"</strong> mantiene alta l'energia{" "}
-                        <br />
-                        e la responsabilità positiva.
-                      </>
-                    ) : openConsiglio === 3 ? (
-                      <>
-                        La vera responsabilità è fornire{" "}
-                        <br />
-                        il <strong>massimo valore possibile</strong>{" "}
-                        <strong>nei limiti</strong> di tempo e risorse disponibili. Chiediti: "Qual è l'obiettivo essenziale di questo lavoro?" Evita il perfezionismo paralizzante (che consuma tempo e benessere) e concentrati sulla qualità che genera il miglior impatto per l'azienda.
-                      </>
-                    ) : null}
-                  </p>
-                </div>
-              </motion.div>
-            </div>
-          </>
-        )}
-      </section>
-      </div>
-
-      {/* Footer nero */}
-      <div
-        className="type-exempt"
-        style={{ 
-        backgroundColor: "black", 
-        minHeight: isDesktop ? "0vh" : "0vh",
-        marginTop: isDesktop ? desktopPxToVw(-450) : mobilePxToVw(680),
-        position: "static",
-        zIndex: 1,
-        padding: isDesktop
-          ? `${desktopPxToVw(150)} ${desktopPxToVw(50)}`
-          : `${mobilePxToVw(20)} ${mobilePxToVw(10)}`,
-        opacity: 1,
-      }}
-      >
-        <div style={{
-          fontFamily: "'Inter', sans-serif",
-          fontWeight: 200,
-          lineHeight: "0.3",
-          color: "white"
-        }}>
-          <p style={{ marginBottom: "15px", fontSize: isDesktop ? "38px" : "var(--type-micro)" }}>Pausa Caffè</p>
-          <p style={{ marginBottom: "15px", fontSize: isDesktop ? "28px" : "var(--type-micro)" }}>Un progetto della Rete dei Comitati Unici di Garanzia e degli Organismi di Parità Città di Milano</p>
-          <p style={{ marginBottom: "15px", fontSize: isDesktop ? "28px" : "var(--type-micro)" }}>Design della comunicazione e benessere nei luoghi di lavoro//Laboratorio di Sintesi Finale//Corso di Laurea in Design della Comunicazione//Scuola del Design, Politecnico di Milano//A.A. 2025–2026</p>
-          <p style={{ marginBottom: "0px", fontSize: isDesktop ? "28px" : "var(--type-micro)" }}>Progetto di Lia Feng, Meng Xin Wang, Ermida Teresa Norì, Ece Gorpelioglu</p>
-        </div>
-      </div>
+                  {openConsiglio === 0 ? (
+                    <>
+                      Riconosci i tuoi limiti: impara il "Sì, ma..."
+                    </>
+                  ) : openConsiglio === 1 ? (
+                    <>
+                      Condividi il carico: dall'io al noi
+                    </>
+                  ) : openConsiglio === 2 ? (
+                    <>
+                      Celebra i piccoli successi: nutri{" "}
+                      <br />
+                      la motivazione
+                    </>
+                  ) : openConsiglio === 3 ? (
+                    <>
+                      Focalizzati sull'impatto, non sulla perfezione
+                    </>
+                  ) : openConsiglio === 4 ? (
+                    <>
+                      Comunica apertamente: la trasparenza paga
+                    </>
+                  ) : null}
+                </h4>
+                <p
+                  style={{
+                    fontFamily: "'Inter', sans-serif",
+                    fontSize: "var(--type-section-body)",
+                    lineHeight: "1.3",
+                    fontWeight: 400,
+                  }}
+                >
+                  {openConsiglio === 0 ? (
+                    <>
+                      La forza è sapere <strong>quando fermarsi</strong>. Impara a riconoscere in anticipo{" "}
+                      <br />
+                      i segnali di <strong>sovraccarico</strong>. Quando ricevi un nuovo compito, invece{" "}
+                      <br />
+                      di accettare passivamente, usa{" "}
+                      <br />
+                      la formula "Sì, lo gestirò ma ho bisogno di <strong>ridefinire la priorità</strong> di X o di delegare Y". Questo definisce <strong>confini chiari</strong> e protegge
+                      <br />
+                      il tuo benessere.
+                    </>
+                  ) : openConsiglio === 1 ? (
+                    <>
+                      Non devi essere l'unico eroe.{" "}
+                      <br />
+                      La <strong>responsabilità condivisa</strong>{" "}
+                      <br />
+                      è un pilastro del successo di team.{" "}
+                      <br />
+                      Se ti senti sommerso/a, <strong>non aspettare di essere in crisi</strong>. Avvicinati a un collega o al tuo responsabile e <strong>chiedi</strong>: "Potresti aiutarmi a sbloccare questa sezione? O a esaminare insieme{" "}
+                      <br />
+                      il piano d'azione?". <strong>Dividere</strong> riduce il rischio e aumenta la velocità.
+                    </>
+                  ) : openConsiglio === 4 ? (
+                    <>
+                      L'<strong>incertezza</strong> è la vera fonte{" "}
+                      <br />
+                      di stress. Se hai un problema,{" "}
+                      <br />
+                      se la scadenza è a rischio,{" "}
+                      <br />
+                      o se hai bisogno di risorse, <strong>comunica immediatamente</strong>{" "}
+                      <br />
+                      e con chiarezza. La responsabilità non è garantire la perfezione,{" "}
+                      <br />
+                      ma garantire la <strong>trasparenza</strong>{" "}
+                      <br />
+                      sul progresso. Il team può aiutarti solo se sa esattamente dove sei.
+                    </>
+                  ) : openConsiglio === 2 ? (
+                    <>
+                      Non aspettare il traguardo finale.{" "}
+                      <br />
+                      Il benessere fiorisce quando <strong>riconosciamo il progresso</strong>.{" "}
+                      <br />
+                      Hai chiuso una mail particolarmente complessa? Hai terminato la prima fase del progetto? <strong>Prenditi un momento</strong> (anche solo un minuto!) per riconoscere quel piccolo risultato. <strong>Celebrare i "mini-goal"</strong> mantiene alta l'energia{" "}
+                      <br />
+                      e la responsabilità positiva.
+                    </>
+                  ) : openConsiglio === 3 ? (
+                    <>
+                      La vera responsabilità è fornire{" "}
+                      <br />
+                      il <strong>massimo valore possibile</strong>{" "}
+                      <strong>nei limiti</strong> di tempo e risorse disponibili. Chiediti: "Qual è l'obiettivo essenziale di questo lavoro?" Evita il perfezionismo paralizzante (che consuma tempo e benessere) e concentrati sulla qualità che genera il miglior impatto per l'azienda.
+                    </>
+                  ) : null}
+                </p>
+              </div>
+            </motion.div>
+          </div>
+        </>
+      )}
       </div>
     </div>
   );

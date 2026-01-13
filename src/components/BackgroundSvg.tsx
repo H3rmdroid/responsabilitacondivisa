@@ -18,7 +18,7 @@ export function BackgroundSvg({ storieCambiamentoRef }: BackgroundSvgProps) {
   type ScrollOffset = NonNullable<Parameters<typeof useScroll>[0]>["offset"];
   const titleScrollOffset: ScrollOffset = isDesktop
     ? ["start start", "end 900%"]
-    : ["start 0%", "end 400%"];
+    : ["start start", "end 300%"];
   const lateralScrollOffset: ScrollOffset = isDesktop
     ? ["start start", "end start"]
     : ["start 50%", "end 100%"];
@@ -51,8 +51,8 @@ export function BackgroundSvg({ storieCambiamentoRef }: BackgroundSvgProps) {
 
   // Path dietro al titolo - si completano più velocemente (40% del tempo invece di 60%)
   // Ordinati dall'alto verso il basso in base alla coordinata Y iniziale
-  const titleDurationScale = isDesktop ? 1.35 : 1;
-  const titleEndCap = isDesktop ? 0.65 : 0.4;
+  const titleDurationScale = isDesktop ? 1 : 1;
+  const titleEndCap = isDesktop ? 1 : 1;
   const createTitlePathAnimation = (delay = 0, duration = 0.5) => {
     const effectiveDuration = duration === 0 ? 0.5 : duration;
     const adjustedDuration = effectiveDuration * titleDurationScale;
@@ -68,10 +68,10 @@ export function BackgroundSvg({ storieCambiamentoRef }: BackgroundSvgProps) {
   // Input normalizzati (0-1) per evitare dipendenza dai pixel di scroll assoluti
   const lateralInput = isDesktop
     ? [0, 0.13, 0.20, 0.29, 0.45, 0.52, 1]
-    : [0, 0.23, 0.5, 1];
+    : [0, 1];
   const lateralOutput = isDesktop
     ? [0, 0, 0.08, 0.155, 0.29, 0.345, 1]
-    : [0, 0, 0.24, 1];
+    : [0, 1];
   const lateralPathLength = useTransform(
     lateralProgress,
     lateralInput,

@@ -2,10 +2,8 @@ import { motion, useScroll, useTransform } from "motion/react";
 import { useRef, useMemo, useEffect, useState } from "react";
 import { useIsDesktop } from "../hooks/useIsDesktop";
 import {
-  desktopPxToVw,
-  desktopVhToVw,
-  mobilePxToVw,
-  mobileVhToVw,
+  DESKTOP_REFERENCE_HEIGHT,
+  MOBILE_REFERENCE_HEIGHT,
 } from "../layout/scale";
 
 export function FloatingTitle() {
@@ -19,8 +17,8 @@ export function FloatingTitle() {
   );
   const config = isDesktop
     ? {
-        sectionHeight: desktopVhToVw(100),
-        stickyOffsetY: desktopPxToVw(960),
+        sectionHeight: DESKTOP_REFERENCE_HEIGHT,
+        stickyOffsetY: 960,
         letterDelayMax: 0.3,
         titleOpacityRange: [0, 0.2] as [number, number],
         titleMoveInput: [0, 0.3, 0.8, 1],
@@ -35,8 +33,8 @@ export function FloatingTitle() {
         },
       }
     : {
-        sectionHeight: mobileVhToVw(100),
-        stickyOffsetY: mobilePxToVw(120),
+        sectionHeight: MOBILE_REFERENCE_HEIGHT,
+        stickyOffsetY: 120,
         letterDelayMax: 0.3,
         titleOpacityRange: [0, 0.2] as [number, number],
         titleMoveInput: [0, 1],
@@ -135,10 +133,10 @@ export function FloatingTitle() {
       style={{ height: config.sectionHeight }}
     >
       <motion.div 
-        className="sticky top-0 h-screen flex items-start justify-start overflow-hidden" 
+        className="sticky top-0 h-full flex items-start justify-start overflow-hidden" 
         style={{ 
-          paddingLeft: isDesktop ? desktopPxToVw(80) : mobilePxToVw(20),
-          paddingRight: isDesktop ? desktopPxToVw(40) : mobilePxToVw(20),
+          paddingLeft: isDesktop ? 80 : 20,
+          paddingRight: isDesktop ? 40 : 20,
           y: titleTranslateY,
           opacity: titleOpacity
         }}
@@ -182,10 +180,10 @@ export function FloatingTitle() {
           <div 
             className="relative"
             style={{
-              marginTop: isDesktop ? desktopPxToVw(24) : mobilePxToVw(10),
+              marginTop: isDesktop ? 24 : 10,
               fontFamily: "'Inter', sans-serif",
               textAlign: 'left',
-              maxWidth: isDesktop ? desktopPxToVw(380) : mobilePxToVw(270)
+              maxWidth: isDesktop ? 380 : 270
             }}
           >
             <p style={{ 

@@ -725,7 +725,7 @@ html {
 }
 
 :root {
-  --type-scale: 0.9;
+  --type-scale: clamp(0.9, calc(0.9 + (100vw - 390px) * 1.45 / 890), 2.35);
   --type-hero: clamp(2.5rem, 5vw, 4rem);
   --type-hero-sub-strong: 16px;
   --type-hero-sub: 16px;
@@ -768,7 +768,6 @@ html {
 
 @media (min-width: 1024px) {
   :root {
-    --type-scale: 2.35;
     --type-hero: clamp(3.5rem, 5vw, 5rem);
     --type-hero-sub-strong: 28px;
     --type-hero-sub: 26px;
@@ -813,7 +812,7 @@ html {
 }
 
 .type-exempt {
-  --type-scale: 1;
+  --type-scale: inherit;
 }
 
 h1 {
@@ -918,4 +917,42 @@ a {
 @property --tw-ease {
   syntax: "*";
   inherits: false
+}
+
+.plusminus {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.plusminus::before,
+.plusminus::after {
+  content: "";
+  display: block;
+  background-color: #333;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transition: 0.35s;
+  width: 100%;
+  height: 1px;
+}
+
+.plusminus::before {
+  transform: translateY(-50%);
+}
+
+.plusminus::after {
+  transform: translateY(-50%) rotate(90deg);
+}
+
+.plusminus.active::before {
+  transform: translateY(-50%) rotate(-90deg);
+  opacity: 0;
+}
+
+.plusminus.active::after {
+  transform: translateY(-50%) rotate(0);
 }

@@ -19,7 +19,7 @@ export function AccordionItem({
     <li className="list-none -ml-5 type-exempt">
       <button
         onClick={onToggle}
-        className="text-left w-full flex items-start gap-2 mb-2"
+        className="text-left w-full flex items-center gap-2 mb-2"
         style={{
           fontFamily: "'Inter', sans-serif",
           fontWeight: 500,
@@ -27,7 +27,11 @@ export function AccordionItem({
           lineHeight: "1.3",
         }}
       >
-        <span>{title}</span>
+        <span style={{ flex: 1 }}>{title}</span>
+        <span
+          aria-hidden="true"
+          className={`plusminus${isOpen ? " active" : ""}`}
+        />
       </button>
       <AnimatePresence initial={false}>
         {isOpen && (

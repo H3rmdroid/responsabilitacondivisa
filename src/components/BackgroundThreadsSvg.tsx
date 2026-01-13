@@ -71,7 +71,7 @@ export function BackgroundThreadsSvg() {
         zIndex: 0,
         pointerEvents: "none",
         outline: "none",
-        backgroundColor: "rgba(160, 68, 68, 0.32)",
+        // backgroundColor: "rgba(160, 68, 68, 0.32)",
       }}
     >
       <motion.div
