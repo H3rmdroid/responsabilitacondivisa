@@ -34,12 +34,12 @@ export function FloatingTitle() {
       }
     : {
         sectionHeight: MOBILE_REFERENCE_HEIGHT,
-        stickyOffsetY: 120,
-        letterDelayMax: 0.3,
+        stickyOffsetY: 100,
+        letterDelayMax: 0.2,
         titleOpacityRange: [0, 0.2] as [number, number],
         titleMoveInput: [0, 1],
         titleMoveOutput: [0, 0],
-        scrollWarpInput: [0, 1],
+        scrollWarpInput: [0, 0.3],
         scrollWarpOutput: [0, 1],
         lineTimings: {
           question: { base: 0.3, step: 0.005, duration: 0.06 },
@@ -133,8 +133,11 @@ export function FloatingTitle() {
       style={{ height: config.sectionHeight }}
     >
       <motion.div 
-        className="sticky top-0 h-full flex items-start justify-start overflow-hidden" 
+        className="flex items-start justify-start overflow-hidden" 
         style={{ 
+          position: isDesktop ? "relative" : "sticky",
+          top: isDesktop ? "auto" : 0,
+          height: isDesktop ? "100%" : "100vh",
           paddingLeft: isDesktop ? 80 : 20,
           paddingRight: isDesktop ? 40 : 20,
           y: titleTranslateY,

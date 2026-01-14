@@ -10,6 +10,7 @@ interface BackgroundSvgProps {
 
 export function BackgroundSvg({ storieCambiamentoRef }: BackgroundSvgProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const lateralRef = useRef<HTMLDivElement>(null);
   const isDesktop = useIsDesktop();
   const { scrollY } = useScroll();
   const [viewportHeight, setViewportHeight] = useState(
@@ -18,10 +19,11 @@ export function BackgroundSvg({ storieCambiamentoRef }: BackgroundSvgProps) {
   type ScrollOffset = NonNullable<Parameters<typeof useScroll>[0]>["offset"];
   const titleScrollOffset: ScrollOffset = isDesktop
     ? ["start start", "end 900%"]
-    : ["start start", "end 300%"];
+    : ["start start", "end end"];
   const lateralScrollOffset: ScrollOffset = isDesktop
     ? ["start start", "end start"]
     : ["start 50%", "end 100%"];
+  const lateralScrollHeight = isDesktop ? "1150vh" : "400vh";
 
   const { backgroundSvg: layoutConfig } = getBackgroundLayout(isDesktop);
   
@@ -30,9 +32,9 @@ export function BackgroundSvg({ storieCambiamentoRef }: BackgroundSvgProps) {
     target: containerRef,
     offset: titleScrollOffset,
   });
-  // Scroll progress per il path laterale: ora agganciato al container del background
+  // Scroll progress per il path laterale: agganciato a un target separato (indipendente da containerHeight)
   const { scrollYProgress: lateralProgress } = useScroll({
-    target: containerRef,
+    target: lateralRef,
     offset: lateralScrollOffset,
   });
   // Progress lineare per le animazioni dei path
@@ -68,10 +70,10 @@ export function BackgroundSvg({ storieCambiamentoRef }: BackgroundSvgProps) {
   // Input normalizzati (0-1) per evitare dipendenza dai pixel di scroll assoluti
   const lateralInput = isDesktop
     ? [0, 0.13, 0.20, 0.29, 0.45, 0.52, 1]
-    : [0, 1];
+    : [0, 0.3, 0.5, 0.64, 0.78, 0.9, 1];
   const lateralOutput = isDesktop
     ? [0, 0, 0.08, 0.155, 0.29, 0.345, 1]
-    : [0, 1];
+    : [0, 0.1, 0.21, 0.31, 0.48, 0.6, 1];
   const lateralPathLength = useTransform(
     lateralProgress,
     lateralInput,
@@ -144,13 +146,26 @@ const debugColors = [
         // backgroundColor: "rgba(160, 68, 68, 0.32)",
       }}
     >
+      <div
+        ref={lateralRef}
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          height: lateralScrollHeight,
+          pointerEvents: "none",
+        }}
+        aria-hidden="true"
+      />
       <motion.div 
         className="relative"
         style={{ 
           opacity: svgOpacity,
-          height: "100%",
-          position: "relative",
-          overflow: "visible"
+          overflow: "visible",
+          ...(isDesktop
+            ? { position: "relative", height: "100%" }
+            : { position: "sticky", top: 0, height: "100vh" }),
         }}
       >
         <svg

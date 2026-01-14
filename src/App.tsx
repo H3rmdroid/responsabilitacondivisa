@@ -97,22 +97,22 @@ export default function App() {
           paddingX: 20,
           paddingTop: 0,
           paddingBottom: 20,
-          marginTop: 700,
+          marginTop: 800,
         },
         impact: {
           paddingX: 20,
           paddingTop: 0,
-          marginTop: 1450,
+          marginTop: 1500,
         },
         quiz: {
           paddingX: 0,
           paddingTop: 0,
-          marginTop: 2270,
+          marginTop: 2290,
         },
         consigli: {
           paddingX: 20,
           paddingTop: 0,
-          marginTop: 2833,
+          marginTop: 2950,
         },
         consigliDots: {
           height: 500,
@@ -253,9 +253,9 @@ export default function App() {
             <AnimatedNumber
               value={438}
               duration={1.8}
-              style={{ margin: 0, fontSize: "var(--type-display)", lineHeight: "0.9", fontFamily: "'Inter Black', 'Inter', sans-serif", fontWeight: 900, marginTop: "15px" }}
+              style={{ margin: 0, fontSize: isDesktop ? "120px" : "70px", lineHeight: "0.9", fontFamily: "'Inter Black', 'Inter', sans-serif", fontWeight: 900, marginTop: "15px" }}
             />
-            <p style={{ margin: 0, fontSize: "var(--type-display-sm)", lineHeight: "1.05", marginTop: "-5px", fontFamily: "'Inter Black', 'Inter', sans-serif", fontWeight: 900 }}>
+            <p style={{ margin: 0, fontSize: isDesktop ? "44px" : "26px", lineHeight: "1.05", marginTop: "-5px", fontFamily: "'Inter Black', 'Inter', sans-serif", fontWeight: 900 }}>
               miliardi di dollari
             </p>
           </div>
@@ -324,7 +324,7 @@ export default function App() {
               value={240}
               duration={1.8}
               suffix="%"
-              style={{ margin: 0, fontSize: "var(--type-display)", lineHeight: "0.9", fontFamily: "'Inter Black', 'Inter', sans-serif", fontWeight: 900, marginTop: "15px" }}
+              style={{ margin: 0, fontSize: isDesktop ? "120px" : "70px", lineHeight: "0.9", fontFamily: "'Inter Black', 'Inter', sans-serif", fontWeight: 900, marginTop: "15px" }}
             />
           </div>
 
@@ -390,7 +390,7 @@ export default function App() {
               value={70}
               duration={1.8}
               suffix="%"
-              style={{ margin: 0, fontSize: "var(--type-display)", lineHeight: "0.9", fontFamily: "'Inter Black', 'Inter', sans-serif", fontWeight: 900, marginTop: "15px" }}
+              style={{ margin: 0, fontSize: isDesktop ? "120px" : "70px", lineHeight: "0.9", fontFamily: "'Inter Black', 'Inter', sans-serif", fontWeight: 900, marginTop: "15px" }}
             />
           </div>
 
@@ -702,7 +702,7 @@ export default function App() {
     "--type-hero-sub": isDesktop ? "26px" : "16px",
     "--type-section-title": isDesktop ? "42px" : "24px",
     "--type-section-subtitle": isDesktop ? "28px" : "18px",
-    "--type-section-body": isDesktop ? "20px" : "16px",
+    "--type-section-body": isDesktop ? "20px" : "15px",
     "--type-section-body-sm": isDesktop ? "18px" : "15px",
     "--type-section-meta": isDesktop ? "16px" : "12px",
     "--type-quiz-title": "var(--type-section-body)",
@@ -966,8 +966,11 @@ export default function App() {
               />
             </div>
             <div
-              className="text-black flex flex-col gap-[42px]"
-              style={{ maxWidth: textMaxWidthNarrow }}
+              className="text-black flex flex-col"
+              style={{
+                maxWidth: textMaxWidthNarrow,
+                gap: isDesktop ? "42px" : "30px"
+              }}
             >
               <p
                 style={{
@@ -1031,7 +1034,7 @@ export default function App() {
           marginTop: 0,
         }}
       >
-        <div className="mb-[30px]" style={{ marginBottom: isDesktop ? "60px" : "30px" }}>
+        <div className="mb-[30px]" style={{ marginBottom: isDesktop ? "60px" : "0px" }}>
           <ScrollColorTitle
             text={`La responsabilità condivisa \nfunziona: risultati ed \nesperienze reali`}
           />
@@ -1039,10 +1042,11 @@ export default function App() {
 
         {/* Introduzione - allineata a sinistra */}
         <div
-          className="flex flex-col gap-[37px] mb-20"
+          className="flex flex-col"
           style={{
             maxWidth: textMaxWidthWide,
-            marginBottom: isDesktop ? "96px" : "80px",
+            marginBottom: isDesktop ? "96px" : "0px",
+            gap: isDesktop ? "42px" : "18px",
           }}
         >
           <div className="text-black flex flex-col gap-[42px]">

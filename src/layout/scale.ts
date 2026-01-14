@@ -14,3 +14,5 @@ export const desktopVhToVw = (vh: number) =>
 
 export const mobileVhToVw = (vh: number) =>
   `${((vh * MOBILE_REFERENCE_HEIGHT) / MOBILE_REFERENCE_WIDTH).toFixed(2)}vw`;
+
+export const mobileVhToVh = (vh: number) => `${vh}vh`;

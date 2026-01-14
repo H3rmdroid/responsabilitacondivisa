@@ -466,7 +466,7 @@ export function Quiz() {
         {/* Progress bar - positioned absolutely at bottom */}
         <div style={{ 
           position: "absolute", 
-          bottom: isDesktop ? "100px" : "55px", 
+          bottom: isDesktop ? "100px" : "30px", 
           left: "48px",
           right: "48px",
         }}>
