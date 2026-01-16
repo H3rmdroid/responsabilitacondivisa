@@ -1,0 +1,3 @@
+cat > .mailmap <<'EOF'
+Ermida <ermida794@gmail.com> <ermapache@users.noreply.github.com>
+EOF
