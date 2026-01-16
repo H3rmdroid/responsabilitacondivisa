@@ -11,6 +11,7 @@ import { Quiz } from "./components/Quiz";
 import { AnimatedNumber } from "./components/AnimatedNumber";
 import { useIsDesktop } from "./hooks/useIsDesktop";
 import { getBackgroundLayout } from "./layout/backgroundLayout";
+import polimiddcLogo from "./components/attachments/polimiddc.svg";
 import {
   motion,
   useScroll,
@@ -48,45 +49,70 @@ export default function App() {
       return 1;
     }
 
-    return window.innerWidth / textReferenceWidth;
+    if (isDesktop) {
+      return window.innerWidth / DESKTOP_REFERENCE_WIDTH;
+    }
+
+    const widthScale = window.innerWidth / MOBILE_REFERENCE_WIDTH;
+    const heightScale = window.innerHeight / MOBILE_REFERENCE_HEIGHT;
+    return Math.min(widthScale, heightScale);
+  });
+  const [mobileScale, setMobileScale] = useState(() => {
+    if (typeof window === "undefined") {
+      return 1;
+    }
+
+    const widthScale = window.innerWidth / MOBILE_REFERENCE_WIDTH;
+    const heightScale = window.innerHeight / MOBILE_REFERENCE_HEIGHT;
+    return Math.min(widthScale, heightScale);
   });
 
   useEffect(() => {
     const updateScale = () => {
-      const width = window.innerWidth || textReferenceWidth;
-      setTextScale(width / textReferenceWidth);
+      if (typeof window === "undefined") return;
+      if (isDesktop) {
+        setTextScale(window.innerWidth / DESKTOP_REFERENCE_WIDTH);
+        setMobileScale(1);
+        return;
+      }
+
+      const widthScale = window.innerWidth / MOBILE_REFERENCE_WIDTH;
+      const heightScale = window.innerHeight / MOBILE_REFERENCE_HEIGHT;
+      const scale = Math.min(widthScale, heightScale);
+      setTextScale(scale);
+      setMobileScale(scale);
     };
 
     updateScale();
     window.addEventListener("resize", updateScale);
 
     return () => window.removeEventListener("resize", updateScale);
-  }, [textReferenceWidth]);
+  }, [isDesktop]);
   const textLayout = isDesktop
     ? {
         about: {
           paddingX: 65,
           paddingTop: 0,
           paddingBottom: 20,
-          marginTop: desktopVhToPx(285),
+          marginTop: desktopVhToPx(300),
         },
         impact: {
           paddingX: 65,
           paddingTop: 0,
-          marginTop: desktopVhToPx(550),
+          marginTop: desktopVhToPx(600),
         },
         quiz: {
           paddingX: 0,
           paddingTop: 0,
-          marginTop: 7300,
+          marginTop: 7100,
         },
         consigli: {
           paddingX: 20,
           paddingTop: 0,
-          marginTop: 8625,
+          marginTop: 8660,
         },
         consigliDots: {
-          height: 500,
+          height: 480,
           marginTop: 415,
           offsetX: 0,
           offsetY: 0,
@@ -97,27 +123,27 @@ export default function App() {
           paddingX: 20,
           paddingTop: 0,
           paddingBottom: 20,
-          marginTop: 800,
+          marginTop: 710,
         },
         impact: {
           paddingX: 20,
           paddingTop: 0,
-          marginTop: 1500,
+          marginTop: 1450,
         },
         quiz: {
           paddingX: 0,
           paddingTop: 0,
-          marginTop: 2290,
+          marginTop: 2210,
         },
         consigli: {
           paddingX: 20,
           paddingTop: 0,
-          marginTop: 2950,
+          marginTop: 2830,
         },
         consigliDots: {
           height: 500,
           marginTop: 60,
-          offsetX: 0,
+          offsetX: 25,
           offsetY: 0,
         },
       };
@@ -700,9 +726,9 @@ export default function App() {
     "--type-hero": isDesktop ? "64px" : "40px",
     "--type-hero-sub-strong": isDesktop ? "28px" : "16px",
     "--type-hero-sub": isDesktop ? "26px" : "16px",
-    "--type-section-title": isDesktop ? "42px" : "24px",
+    "--type-section-title": isDesktop ? "52px" : "24px",
     "--type-section-subtitle": isDesktop ? "28px" : "18px",
-    "--type-section-body": isDesktop ? "20px" : "15px",
+    "--type-section-body": isDesktop ? "30px" : "15px",
     "--type-section-body-sm": isDesktop ? "18px" : "15px",
     "--type-section-meta": isDesktop ? "16px" : "12px",
     "--type-quiz-title": "var(--type-section-body)",
@@ -711,14 +737,17 @@ export default function App() {
     "--type-quiz-meta": isDesktop ? "16px" : "12px",
   };
 
+  const rootStyles: CSSProperties & Record<string, string | number> = {
+    position: "relative",
+    margin: 0,
+    padding: 0,
+    "--mobile-scale": mobileScale,
+  };
+
   return (
       <div
         className="bg-white min-h-screen"
-        style={{
-          position: "relative",
-          margin: 0,
-          padding: 0,
-        }}
+        style={rootStyles}
       >
       <div
         style={{
@@ -944,6 +973,7 @@ export default function App() {
         <div style={textScaleInnerStyles}>
         <FloatingTitle />
 
+
         <section
           id="about"
           style={{
@@ -969,7 +999,7 @@ export default function App() {
               className="text-black flex flex-col"
               style={{
                 maxWidth: textMaxWidthNarrow,
-                gap: isDesktop ? "42px" : "30px"
+                gap: isDesktop ? "90px" : "30px"
               }}
             >
               <p
@@ -1060,10 +1090,10 @@ export default function App() {
                 marginTop: "20px",
               }}
             >
-              La responsabilità condivisa<br />non è solo teoria.
+              La responsabilità condivisa non è solo teoria. <br />
               Aziende di ogni settore stanno scoprendo che{" "}
-              <strong>distribuire equamente</strong> i compiti<br />e promuovere la{" "}
-              <strong>collaborazione</strong> porta a <strong>risultati concreti</strong>: team<br />più motivati, meno burnout<br />e una <strong>cultura del
+              <strong>distribuire equamente</strong> i compiti e promuovere la{" "}
+              <strong>collaborazione</strong> porta a <strong>risultati concreti</strong>: team più motivati, meno burnout e una <strong>cultura del
               lavoro più sana</strong>.
             </p>
           </div>
@@ -1083,7 +1113,7 @@ export default function App() {
               style={{
                 fontFamily: "'Inter', sans-serif",
                 fontWeight: 700,
-                fontSize: "var(--type-section-subtitle)",
+                fontSize: "var(--type-section-title)",
                 lineHeight: "1.05",
                 marginBottom: "10px",
               }}
@@ -1125,7 +1155,7 @@ export default function App() {
               style={{
                 fontFamily: "'Inter', sans-serif",
                 fontWeight: 700,
-                fontSize: "var(--type-section-subtitle)",
+                fontSize: "var(--type-section-title)",
                 lineHeight: "1.05",
                 marginBottom: "10px",
               }}
@@ -1168,7 +1198,7 @@ export default function App() {
               style={{
                 fontFamily: "'Inter', sans-serif",
                 fontWeight: 700,
-                fontSize: "var(--type-section-subtitle)",
+                fontSize: "var(--type-section-title)",
                 lineHeight: "1.05",
                 marginBottom: "10px",
               }}
@@ -1179,7 +1209,7 @@ export default function App() {
               className="list-disc pl-5 space-y-2"
               style={{
                 fontFamily: "'Inter', sans-serif",
-                fontSize: "var(--type-section-body-sm)",
+                fontSize: "var(--type-section-body)",
                 lineHeight: "1.6",
               }}
             >
@@ -1298,7 +1328,8 @@ export default function App() {
           position: "absolute",
           top: footerTop,
           left: 0,
-          right: 0,
+          right: isDesktop ? 0 : "auto",
+          width: isDesktop ? "100%" : "calc(100vw / var(--mobile-scale))",
           minHeight: footerLayout.minHeight,
           marginTop: 0,
           zIndex: 1,
@@ -1306,17 +1337,188 @@ export default function App() {
           opacity: 1,
         }}
         >
-          <div style={{
-            fontFamily: "'Inter', sans-serif",
-            fontWeight: 200,
-            lineHeight: "0.3",
-            color: "white"
-          }}>
-            <p style={{ marginBottom: "15px", fontSize: isDesktop ? "38px" : "var(--type-micro)" }}>Pausa Caffè</p>
-            <p style={{ marginBottom: "15px", fontSize: isDesktop ? "28px" : "var(--type-micro)" }}>Un progetto della Rete dei Comitati Unici di Garanzia e degli Organismi di Parità Città di Milano</p>
-            <p style={{ marginBottom: "15px", fontSize: isDesktop ? "28px" : "var(--type-micro)" }}>Design della comunicazione e benessere nei luoghi di lavoro//Laboratorio di Sintesi Finale//Corso di Laurea in Design della Comunicazione//Scuola del Design, Politecnico di Milano//A.A. 2025–2026</p>
-            <p style={{ marginBottom: "0px", fontSize: isDesktop ? "28px" : "var(--type-micro)" }}>Progetto di Lia Feng, Meng Xin Wang, Ermida Teresa Norì, Ece Gorpelioglu</p>
-          </div>
+          {isDesktop ? (
+            <div
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                color: "white",
+                display: "flex",
+                flexDirection: "column",
+                gap: "60px",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "flex-start",
+                  gap: "80px",
+                }}
+              >
+                <div style={{ flex: 1 }}>
+                  <div
+                    style={{
+                      fontWeight: 700,
+                      color: "#bfbfbf",
+                      fontSize: "20px",
+                      marginBottom: "12px",
+                    }}
+                  >
+                    Pausa Caffé
+                  </div>
+                  <div style={{ fontSize: "20px", lineHeight: "1.4" }}>
+                    Un progetto della Rete dei Comitati Unici di Garanzia e degli Organismi di Parità Città di Milano.
+                  </div>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div
+                    style={{
+                      fontWeight: 700,
+                      color: "#bfbfbf",
+                      fontSize: "20px",
+                      marginBottom: "12px",
+                    }}
+                  >
+                    Team
+                  </div>
+                  <div style={{ fontSize: "20px", lineHeight: "1.6" }}>
+                    Lia Feng
+                    <br />
+                    Meng Xin Wang
+                    <br />
+                    Ermida Teresa Norì
+                    <br />
+                    Ece Gorpelioglu
+                  </div>
+                </div>
+              </div>
+
+              <div
+                style={{
+                  height: "1px",
+                  backgroundColor: "#bfbfbf",
+                  opacity: 0.6,
+                }}
+              />
+
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  gap: "80px",
+                }}
+              >
+                <div style={{ flex: 1, fontSize: "18px", lineHeight: "1.5" }}>
+                  <div style={{ fontWeight: 700, marginBottom: "8px" }}>
+                    Laboratorio di Sintesi Finale, A.A. 2025–2026
+                  </div>
+                  <div> Design della Comunicazione e benessere <br /> nei luoghi di lavoro</div>
+                </div>
+                <div style={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
+                  <img
+                    src={polimiddcLogo}
+                    alt="PoliMi DDC"
+                    style={{width: "100%", height: "auto" }}
+                  />
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                color: "white",
+                display: "flex",
+                flexDirection: "column",
+                gap: "32px",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "flex-start",
+                  gap: "24px",
+                }}
+              >
+                <div style={{ flex: 1 }}>
+                  <div
+                    style={{
+                      fontWeight: 700,
+                      color: "#bfbfbf",
+                      fontSize: "10px",
+                      marginBottom: "8px",
+                    }}
+                  >
+                    Pausa Caffé
+                  </div>
+                  <div style={{ fontSize: "10px", lineHeight: "1.4" }}>
+                    Un progetto della Rete dei Comitati Unici di Garanzia e degli Organismi di Parità Città di Milano.
+                  </div>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div
+                    style={{
+                      fontWeight: 700,
+                      color: "#bfbfbf",
+                      fontSize: "10px",
+                      marginBottom: "8px",
+                    }}
+                  >
+                    Team
+                  </div>
+                  <div style={{ fontSize: "10px", lineHeight: "1.5" }}>
+                    Lia Feng
+                    <br />
+                    Meng Xin Wang
+                    <br />
+                    Ermida Teresa Norì
+                    <br />
+                    Ece Gorpelioglu
+                  </div>
+                </div>
+              </div>
+
+              <div
+                style={{
+                  height: "1px",
+                  backgroundColor: "#bfbfbf",
+                  opacity: 0.6,
+                }}
+              />
+
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "flex-end",
+                  gap: "24px",
+                }}
+              >
+                <div style={{ flex: 1, fontSize: "10px", lineHeight: "1.5" }}>
+                  <div style={{ fontWeight: 700, marginBottom: "6px" }}>
+                    Laboratorio di Sintesi Finale <br /> A. A. 2025–2026
+                  </div>
+                  <div>Design della Comunicazione e <br /> benessere nei luoghi di lavoro</div>
+                </div>
+                <div
+                  style={{
+                    flex: 1,
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    alignSelf: "center",
+                  }}
+                >
+                  <img
+                    src={polimiddcLogo}
+                    alt="PoliMi DDC"
+                    style={{ maxWidth: "100%", width: "100%", height: "auto" }}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
         </div>
         </div>
       </div>
@@ -1414,51 +1616,34 @@ export default function App() {
                   {openConsiglio === 0 ? (
                     <>
                       La forza è sapere <strong>quando fermarsi</strong>. Impara a riconoscere in anticipo{" "}
-                      <br />
                       i segnali di <strong>sovraccarico</strong>. Quando ricevi un nuovo compito, invece{" "}
-                      <br />
                       di accettare passivamente, usa{" "}
-                      <br />
                       la formula "Sì, lo gestirò ma ho bisogno di <strong>ridefinire la priorità</strong> di X o di delegare Y". Questo definisce <strong>confini chiari</strong> e protegge
-                      <br />
                       il tuo benessere.
                     </>
                   ) : openConsiglio === 1 ? (
                     <>
                       Non devi essere l'unico eroe.{" "}
-                      <br />
                       La <strong>responsabilità condivisa</strong>{" "}
-                      <br />
                       è un pilastro del successo di team.{" "}
-                      <br />
                       Se ti senti sommerso/a, <strong>non aspettare di essere in crisi</strong>. Avvicinati a un collega o al tuo responsabile e <strong>chiedi</strong>: "Potresti aiutarmi a sbloccare questa sezione? O a esaminare insieme{" "}
-                      <br />
                       il piano d'azione?". <strong>Dividere</strong> riduce il rischio e aumenta la velocità.
                     </>
                   ) : openConsiglio === 4 ? (
                     <>
                       L'<strong>incertezza</strong> è la vera fonte{" "}
-                      <br />
                       di stress. Se hai un problema,{" "}
-                      <br />
                       se la scadenza è a rischio,{" "}
-                      <br />
                       o se hai bisogno di risorse, <strong>comunica immediatamente</strong>{" "}
-                      <br />
                       e con chiarezza. La responsabilità non è garantire la perfezione,{" "}
-                      <br />
                       ma garantire la <strong>trasparenza</strong>{" "}
-                      <br />
                       sul progresso. Il team può aiutarti solo se sa esattamente dove sei.
                     </>
                   ) : openConsiglio === 2 ? (
                     <>
                       Non aspettare il traguardo finale.{" "}
-                      <br />
                       Il benessere fiorisce quando <strong>riconosciamo il progresso</strong>.{" "}
-                      <br />
                       Hai chiuso una mail particolarmente complessa? Hai terminato la prima fase del progetto? <strong>Prenditi un momento</strong> (anche solo un minuto!) per riconoscere quel piccolo risultato. <strong>Celebrare i "mini-goal"</strong> mantiene alta l'energia{" "}
-                      <br />
                       e la responsabilità positiva.
                     </>
                   ) : openConsiglio === 3 ? (

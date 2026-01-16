@@ -23,7 +23,7 @@ export function AccordionItem({
         style={{
           fontFamily: "'Inter', sans-serif",
           fontWeight: 500,
-          fontSize: "var(--type-section-body-sm)",
+          fontSize: "var(--type-section-body)",
           lineHeight: "1.3",
         }}
       >

@@ -215,6 +215,9 @@ export function Quiz() {
   const quizOpacity = useTransform(scrollYProgress, [0, 0.3], [0, 1]);
   const quizY = useTransform(scrollYProgress, [0, 0.3], [30, 0]);
   const resultsY = useTransform(scrollYProgress, [0, 0.3], [0, -30]); // 30px più in alto rispetto alle domande
+  const resultsXOffset = isDesktop ? 0 : 40;
+  const resultsYOffset = isDesktop ? 0 : 20;
+  const resultsYWithOffset = useTransform(resultsY, (value) => value + resultsYOffset);
 
   // Debug
   useEffect(() => {
@@ -253,25 +256,27 @@ export function Quiz() {
   if (showResults) {
     const totalScore = calculateScore();
     const profile = getProfile(totalScore);
+    const resultWidth = isDesktop ? 460 : 205;
+    const resultHeight = isDesktop ? 520 : 270;
 
     return (
-      <motion.div
-        ref={quizRef}
-        className="p-12 type-exempt"
-        style={{
-          backgroundColor: "white",
-          border: "none",
-          width: isDesktop ? "460px" : "250px",
-          height: isDesktop ? "520px" : "315px",
-          margin: "0 auto",
-          overflow: "auto",
-          scrollbarWidth: "none",
-          msOverflowStyle: "none",
-          opacity: quizOpacity,
-          y: resultsY,
-          clipPath: "polygon(0 30px, 50% 30px, 100% 0, 100% 100%, 0 100%)", // Orizzontale da sinistra, cresce verso l'alto dalla metà a destra
-        }}
-      >
+        <motion.div
+          ref={quizRef}
+          className="p-12 type-exempt"
+          style={{
+            backgroundColor: "white",
+            border: "none",
+            width: `${resultWidth}px`,
+            height: `${resultHeight}px`,
+            margin: "0 auto",
+            overflow: "auto",
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+            opacity: quizOpacity,
+            x: resultsXOffset,
+            y: resultsYWithOffset,
+          }}
+        >
         <style>{`
           div::-webkit-scrollbar {
             display: none;

@@ -34,7 +34,7 @@ export function FloatingTitle() {
       }
     : {
         sectionHeight: MOBILE_REFERENCE_HEIGHT,
-        stickyOffsetY: 100,
+        stickyOffsetY: 150,
         letterDelayMax: 0.2,
         titleOpacityRange: [0, 0.2] as [number, number],
         titleMoveInput: [0, 1],

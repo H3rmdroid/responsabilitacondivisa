@@ -103,7 +103,7 @@ export function BackgroundThreadsSvg() {
                   fill: none;
                   stroke: #232322;
                   stroke-miterlimit: 10;
-                  stroke-width: .7px;
+                  stroke-width: 1px;
                 }
               `}
             </style>

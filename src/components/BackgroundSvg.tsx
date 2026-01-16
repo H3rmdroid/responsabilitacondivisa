@@ -10,6 +10,7 @@ interface BackgroundSvgProps {
 
 export function BackgroundSvg({ storieCambiamentoRef }: BackgroundSvgProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLDivElement>(null);
   const lateralRef = useRef<HTMLDivElement>(null);
   const isDesktop = useIsDesktop();
   const { scrollY } = useScroll();
@@ -18,18 +19,19 @@ export function BackgroundSvg({ storieCambiamentoRef }: BackgroundSvgProps) {
   );
   type ScrollOffset = NonNullable<Parameters<typeof useScroll>[0]>["offset"];
   const titleScrollOffset: ScrollOffset = isDesktop
-    ? ["start start", "end 900%"]
+    ? ["start start", "end 500%"]
     : ["start start", "end end"];
   const lateralScrollOffset: ScrollOffset = isDesktop
     ? ["start start", "end start"]
     : ["start 50%", "end 100%"];
   const lateralScrollHeight = isDesktop ? "1150vh" : "400vh";
+  const titleScrollHeight = isDesktop ? "600vh" : "200vh";
 
   const { backgroundSvg: layoutConfig } = getBackgroundLayout(isDesktop);
   
   // Scroll progress per i path dietro al titolo (primi 200vh circa)
   const { scrollYProgress: titleProgress } = useScroll({
-    target: containerRef,
+    target: titleRef,
     offset: titleScrollOffset,
   });
   // Scroll progress per il path laterale: agganciato a un target separato (indipendente da containerHeight)
@@ -146,6 +148,18 @@ const debugColors = [
         // backgroundColor: "rgba(160, 68, 68, 0.32)",
       }}
     >
+      <div
+        ref={titleRef}
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          height: titleScrollHeight,
+          pointerEvents: "none",
+        }}
+        aria-hidden="true"
+      />
       <div
         ref={lateralRef}
         style={{

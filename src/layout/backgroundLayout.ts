@@ -1,4 +1,4 @@
-import { desktopVhToVw, mobileVhToVh } from "./scale";
+import { desktopVhToVw, mobileVhToScaledPx, mobileVwToScaledPx } from "./scale";
 
 export type BackgroundSvgLayout = {
   containerHeight: string;
@@ -115,13 +115,13 @@ export const getBackgroundLayout = (isDesktop: boolean): BackgroundLayout => {
         svgPreserveAspectRatio: "xMidYStart meet",
       }
     : {
-        containerHeight: mobileVhToVh(100),
+        containerHeight: mobileVhToScaledPx(100),
         containerTop: "0px",
         containerLeft: "0px",
         containerRight: "0px",
         svgTop: 0,
         svgLeft: "50%",
-        svgWidth: "109vw",
+        svgWidth: mobileVwToScaledPx(109),
         svgMaxWidth: "2000px",
         svgTransform: "translateX(-50%)",
         svgPreserveAspectRatio: "xMidYStart meet",
@@ -147,13 +147,13 @@ export const getBackgroundLayout = (isDesktop: boolean): BackgroundLayout => {
         opacityRange: [0, 0.08],
         pathCap: 1,
         stickyRelease: 0.36,
-        containerTop: mobileVhToVh(301),
+        containerTop: mobileVhToScaledPx(269),
         containerLeft: "0px",
         containerRight: "0px",
-        containerHeight: mobileVhToVh(100),
+        containerHeight: mobileVhToScaledPx(100),
         svgTop: 0,
         svgLeft: "50%",
-        svgWidth: "109vw",
+        svgWidth: mobileVwToScaledPx(109),
         svgTransform: "translateX(-50%)",
         svgTransformOrigin: "top left",
         svgPreserveAspectRatio: "xMidYStart meet",
@@ -178,14 +178,14 @@ export const getBackgroundLayout = (isDesktop: boolean): BackgroundLayout => {
     : {
         opacityRange: [0, 0.08],
         pathCap: 1,
-        containerTop: mobileVhToVh(365.5),
+        containerTop: mobileVhToScaledPx(327),
         containerLeft: "0px",
         containerRight: "0px",
-        containerHeight: mobileVhToVh(100),
+        containerHeight: mobileVhToScaledPx(100),
         svgTop: 0,
         svgLeft: "50%",
         svgRight: undefined,
-        svgWidth: "109vw",
+        svgWidth: mobileVwToScaledPx(109),
         svgTransform: "translateX(-50%)",
         svgTransformOrigin: "top left",
         svgPreserveAspectRatio: "xMidYStart meet",
@@ -204,12 +204,12 @@ export const getBackgroundLayout = (isDesktop: boolean): BackgroundLayout => {
         svgPreserveAspectRatio: "xMidYStart meet",
       }
     : {
-        containerTop: mobileVhToVh(176),
+        containerTop: mobileVhToScaledPx(150),
         containerLeft: "0px",
         containerRight: "0px",
-        containerHeight: mobileVhToVh(100),
+        containerHeight: mobileVhToScaledPx(100),
         svgTop: 0,
-        svgWidth: "109vw",
+        svgWidth: mobileVwToScaledPx(109),
         svgLeft: "50%",
         svgTransform: "translateX(-50%)",
         svgPreserveAspectRatio: "xMidYStart meet",

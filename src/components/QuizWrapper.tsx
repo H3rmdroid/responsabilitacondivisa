@@ -16,15 +16,15 @@ export function QuizWrapper() {
         containerPaddingX: 0,
         contentTranslateY: 0,
         titleMarginTop: 0,
-        titleMarginBottom: 0,
+        titleMarginBottom: 500,
         quizTranslateY: 0,
       }
     : {
         containerPaddingX: 25,
-        contentTranslateY: -140,
-        titleMarginTop: 0,
-        titleMarginBottom: 120,
-        quizTranslateY: 0,
+        contentTranslateY: -85,
+        titleMarginTop: -40,
+        titleMarginBottom: 145,
+        quizTranslateY: -51,
       };
   const quizTitle = isDesktop
     ? "Mappa la tua percezione di \nresponsabilità: fai il punto con \nun quiz"
